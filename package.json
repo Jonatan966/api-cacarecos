@@ -6,10 +6,11 @@
   "license": "MIT",
   "scripts": {
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored",
-    "start": "node dist/server.js",
-    "dev": "ts-node-dev -r tsconfig-paths/register -r dotenv/config --respawn --transpile-only --ignore-watch node_modules --no-notify src/server.ts",
-    "test": "jest",
-    "typeorm": "NODE_ENV=dev npx ts-node ./node_modules/typeorm/cli.js"
+    "start": "NODE_ENV=production node dist/server.js",
+    "dev": "NODE_ENV=development ts-node-dev -r tsconfig-paths/register -r dotenv/config --respawn --transpile-only --ignore-watch node_modules --no-notify src/server.ts",
+    "test": "NODE_ENV=tests jest --setupFiles dotenv/config ",
+    "typeorm": "NODE_ENV=development npx ts-node ./node_modules/typeorm/cli.js",
+    "typeorm-test": "NODE_ENV=tests npx ts-node ./node_modules/typeorm/cli.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",

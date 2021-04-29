@@ -1,31 +1,50 @@
-const configs = process.env.NODE_ENV == 'prod' ? {
-  entities: [
-    'dist/app/models/*.js'
-  ],
-  migrations: [
-    'dist/database/migrations/*.js'
-  ],
-  cli: {
-    migrationsDir: 'dist/database/migrations'
+const configTypes = {
+  production: {
+    entities: [
+      'dist/app/models/*.js'
+    ],
+    migrations: [
+      'dist/database/migrations/*.js'
+    ],
+    cli: {
+      migrationsDir: 'dist/database/migrations'
+    },
+    ssl: {
+      rejectUnauthorized: false
+    },
+    url: process.env.DATABASE_URL
   },
-  ssl: {
-    rejectUnauthorized: false
-  }
-} : {
-  entities: [
+  development: {
+    entities: [
     'src/app/models/*.ts'
-  ],
-  migrations: [
-    'src/database/migrations/*.ts'
-  ],
-  cli: {
-    migrationsDir: 'src/database/migrations'
+    ],
+    migrations: [
+      'src/database/migrations/*.ts'
+    ],
+    cli: {
+      migrationsDir: 'src/database/migrations'
+    },
+    url: process.env.DATABASE_URL
   },
-  synchronize: true,
+  tests: {
+    entities: [
+      'src/app/models/*.ts'
+    ],
+    migrations: [
+      'src/database/migrations/*.ts'
+    ],  
+    cli: {
+      migrationsDir: 'src/database/migrations'
+    },
+    url: process.env.DATABASE_TESTS_URL
+  }
+}
+
+const globalConfigs = {
+  type: 'postgres'
 }
 
 module.exports = {
-  type: "postgres",
-  url: process.env.DATABASE_URL,
-  ...configs
+  ...globalConfigs,
+  ...configTypes[process.env.NODE_ENV ?? 'development']
 }
