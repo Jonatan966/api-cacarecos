@@ -75,6 +75,25 @@ describe('Permission Model', () => {
 
     expect(result).toHaveProperty('affected', 1)
   })
+
+  it('Should be able to create a temporary permission for next tests', async () => {
+    const permissionRepository = getRepository(Permission)
+
+    const permissionAlreadyExists = await permissionRepository.findOne({
+      name: 'TEST'
+    })
+
+    if (permissionAlreadyExists?.id) {
+      expect(permissionAlreadyExists).toHaveProperty('id')
+      return
+    }
+
+    const insertedPermission = await permissionRepository.insert({
+      name: 'TEST'
+    })
+
+    expect(insertedPermission.raw).toHaveLength(1)
+  })
 })
 
 describe('Role Model', () => {
@@ -142,5 +161,55 @@ describe('Role Model', () => {
     const result = await roleRepository.delete(role)
 
     expect(result).toHaveProperty('affected', 1)
+  })
+
+  it('Should be able to create a temporary role for next tests', async () => {
+    const roleRepository = getRepository(Role)
+
+    const roleAlreadyExists = await roleRepository.findOne({
+      name: 'TEST'
+    })
+
+    if (roleAlreadyExists?.id) {
+      expect(roleAlreadyExists).toHaveProperty('id')
+      return
+    }
+
+    const insertedRole = await roleRepository.insert({
+      name: 'TEST'
+    })
+
+    expect(insertedRole.raw).toHaveLength(1)
+  })
+})
+
+describe('Relation with Permission and Role models', () => {
+  it('Should be able to add a permission to an existing role', async () => {
+    const roleRepo = getRepository(Role)
+    const permissionRepo = getRepository(Permission)
+    // BUY
+    var selectedRole = await roleRepo.findOne({
+      name: 'TEST'
+    })
+
+    const selectedPermission = await permissionRepo.findOne({
+      name: 'TEST'
+    })
+
+    selectedRole.permissions = [selectedPermission]
+
+    const saveResult = await roleRepo.save(selectedRole)
+
+    expect(saveResult.permissions).toHaveLength(1)
+  })
+
+  it('Should be able to return permissions when querying a role', async () => {
+    const roleRepo = getRepository(Role)
+
+    const selectedRole = await roleRepo.findOne({
+      name: 'TEST'
+    }, { relations: ['permissions'] })
+
+    expect(selectedRole.permissions).toHaveLength(1)
   })
 })
