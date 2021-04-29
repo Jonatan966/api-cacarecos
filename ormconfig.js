@@ -36,6 +36,7 @@ const configTypes = {
     cli: {
       migrationsDir: 'src/database/migrations'
     },
+    logging: true,
     url: process.env.DATABASE_TESTS_URL
   }
 }
