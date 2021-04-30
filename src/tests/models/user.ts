@@ -87,5 +87,26 @@ export const userModelTests = () => {
 
       expect(result).toHaveProperty('affected', 1)
     })
+
+    it('Should be able to create a temporary user for next tests', async () => {
+      const userRepository = getRepository(User)
+
+      const userAlreadyExists = await userRepository.findOne({
+        email: 'alejandro@email.com'
+      })
+
+      if (userAlreadyExists?.id) {
+        expect(userAlreadyExists).toHaveProperty('id')
+        return
+      }
+
+      const insertedUser = await userRepository.insert({
+        name: 'Alejandro',
+        email: 'alejandro@email.com',
+        password: 'a1ejandr0'
+      })
+
+      expect(insertedUser.raw).toHaveLength(1)
+    })
   })
 }
