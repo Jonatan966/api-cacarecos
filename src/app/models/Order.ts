@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { User } from './User'
 
-enum Status {
+export enum OrderStatus {
   AwaitingPayment = 'AWAITING_PAYMENT',
   PreparingDelivery = 'PREPARING_DELIVERY',
   OnDelivery = 'ON_DELIVERY',
@@ -23,7 +23,7 @@ export class Order {
   finishedBy: User;
 
   @Column()
-  status: Status;
+  status: OrderStatus;
 
   @Column()
   amount: number;
