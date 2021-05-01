@@ -1,4 +1,5 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Order } from './Order'
 import { Role } from './Role'
 
 @Entity('users')
@@ -28,6 +29,9 @@ export class User {
     }
   })
   roles: Role[];
+
+  @OneToMany(() => Order, order => order.owner)
+  orders: Order[];
 
   @Column({ name: 'created_at' })
   createdAt: Date;
