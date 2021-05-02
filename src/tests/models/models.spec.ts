@@ -1,4 +1,5 @@
 import { connectToDatabase } from '../setup'
+import { categoryModelTests } from './category'
 import { orderModelTests } from './order'
 import { permissionModelTests } from './permission'
 import { relationPermissionAndRoleTests } from './relation-permission-role'
@@ -16,3 +17,4 @@ userModelTests()
 relationUserAndRoleTests()
 orderModelTests()
 relationUserAndOrder()
+categoryModelTests()
