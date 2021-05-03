@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { AfterLoad, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { Category } from './Category'
+import { OrderProduct } from './OrderProduct'
 
 @Entity('products')
 export class Product {
@@ -12,19 +13,22 @@ export class Product {
   @Column()
   slug: string;
 
-  @Column()
+  @Column({ select: false })
   description: string;
 
-  @Column({ name: 'other_details' })
+  @Column({ name: 'other_details', select: false })
   otherDetails: string;
 
-  @ManyToOne(() => Category)
+  @ManyToOne(() => Category, { eager: true })
   @JoinColumn({ name: 'category_id' })
   category: Category;
+
+  @OneToMany(() => OrderProduct, orderProduct => orderProduct.product)
+  orderProducts: OrderProduct[];
 
   @Column()
   price: number;
 
-  @Column()
+  @Column({ select: false })
   units: number;
 }

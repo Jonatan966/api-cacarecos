@@ -1,4 +1,5 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { OrderProduct } from './OrderProduct'
 import { User } from './User'
 
 export enum OrderStatus {
@@ -21,6 +22,9 @@ export class Order {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'finished_by' })
   finishedBy: User;
+
+  @OneToMany(() => OrderProduct, orderProduct => orderProduct.order, { eager: true })
+  orderProducts: OrderProduct[];
 
   @Column()
   status: OrderStatus;
