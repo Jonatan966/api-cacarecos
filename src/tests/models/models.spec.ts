@@ -4,6 +4,7 @@ import { orderModelTests } from './order'
 import { permissionModelTests } from './permission'
 import { productModelTests } from './product'
 import { relationPermissionAndRoleTests } from './relation-permission-role'
+import { relationProductAndCategory } from './relation-product-category'
 import { relationUserAndOrder } from './relation-user-order'
 import { relationUserAndRoleTests } from './relation-user-role'
 import { roleModelTests } from './role'
@@ -20,3 +21,4 @@ orderModelTests()
 relationUserAndOrder()
 categoryModelTests()
 productModelTests()
+relationProductAndCategory()
