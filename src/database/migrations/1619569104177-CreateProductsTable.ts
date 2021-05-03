@@ -21,6 +21,12 @@ export class CreateProductsTable1619569104177 implements MigrationInterface {
           isNullable: false
         },
         {
+          name: 'slug',
+          type: 'varchar',
+          isUnique: true,
+          isNullable: false
+        },
+        {
           name: 'description',
           type: 'varchar',
           isNullable: false
