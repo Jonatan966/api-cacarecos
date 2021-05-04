@@ -10,10 +10,10 @@ export class User {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ select: false })
   email: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @ManyToMany(() => Role)
@@ -33,6 +33,6 @@ export class User {
   @OneToMany(() => Order, order => order.owner)
   orders: Order[];
 
-  @Column({ name: 'created_at' })
+  @Column({ name: 'created_at', select: false })
   createdAt: Date;
 }
