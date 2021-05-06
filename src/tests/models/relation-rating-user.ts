@@ -1,5 +1,6 @@
-import { Product } from '@models/Product'
 import { getRepository } from 'typeorm'
+
+import { Product } from '@models/Product'
 
 export const relationRatingAndUserTests = () => {
   describe('Relation with Rating and User models', () => {

@@ -1,5 +1,6 @@
-import { Permission } from '@models/Permission'
 import { getRepository } from 'typeorm'
+
+import { Permission } from '@models/Permission'
 
 export const permissionModelTests = () => {
   describe('Permission Model', () => {

@@ -6,6 +6,7 @@ import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
 import { useObjectValidation } from '@hooks/useObjectValidation'
 import { Permission } from '@models/Permission'
 import { Role } from '@models/Role'
+
 import { RoleProps, RoleSchema } from '../schemas/RoleSchema'
 
 export const RoleController = {

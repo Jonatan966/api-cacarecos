@@ -1,5 +1,6 @@
-import { Product } from '@models/Product'
 import { getRepository } from 'typeorm'
+
+import { Product } from '@models/Product'
 
 export const relationProductAndCategory = () => {
   describe('Relation with Product and Category models', () => {

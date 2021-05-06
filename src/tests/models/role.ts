@@ -1,5 +1,6 @@
-import { Role } from '@models/Role'
 import { getRepository } from 'typeorm'
+
+import { Role } from '@models/Role'
 
 export const roleModelTests = () => {
   describe('Role Model', () => {

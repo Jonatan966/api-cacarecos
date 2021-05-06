@@ -1,4 +1,5 @@
 import 'reflect-metadata'
+
 import { connectToDatabase } from '../setup'
 import { categoryModelTests } from './category'
 import { orderModelTests } from './order'

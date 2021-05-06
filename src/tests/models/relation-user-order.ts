@@ -1,6 +1,7 @@
+import { getRepository } from 'typeorm'
+
 import { Order } from '@models/Order'
 import { User } from '@models/User'
-import { getRepository } from 'typeorm'
 
 export const relationUserAndOrder = () => {
   describe('Relation with User and Order models', () => {

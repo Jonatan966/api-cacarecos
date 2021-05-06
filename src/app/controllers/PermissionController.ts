@@ -1,8 +1,9 @@
-import { Permission } from '@models/Permission'
-import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
 import { Request, Response } from 'express'
-import { useErrorMessage } from '@hooks/useErrorMessage'
 import { getRepository } from 'typeorm'
+
+import { useErrorMessage } from '@hooks/useErrorMessage'
+import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
+import { Permission } from '@models/Permission'
 
 export const PermissionController = {
   async create (req: Request, res: Response) {

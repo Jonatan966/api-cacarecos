@@ -1,4 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+
 import { Category } from './Category'
 import { OrderProduct } from './OrderProduct'
 import { Rating } from './Rating'

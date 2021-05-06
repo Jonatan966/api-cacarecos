@@ -1,5 +1,6 @@
-import { Category } from '@models/Category'
 import { getRepository } from 'typeorm'
+
+import { Category } from '@models/Category'
 
 export const categoryModelTests = () => {
   describe('Category Model', () => {

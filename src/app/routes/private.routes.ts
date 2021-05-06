@@ -1,6 +1,7 @@
+import { Router } from 'express'
+
 import { PermissionController } from '@controllers/PermissionController'
 import { RoleController } from '@controllers/RoleController'
-import { Router } from 'express'
 
 const privateRoutes = Router()
 

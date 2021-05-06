@@ -24,7 +24,8 @@
                 "newlinesBetween": "always",
                 "groups": [
                     ["module"],
-                    "/^@/"
+                    "/^@/",
+                    ["/^.\//", "/^..\//"]
                 ],
                 "alphabetize": { "order": "asc", "ignoreCase": true }
             }

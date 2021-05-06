@@ -1,6 +1,7 @@
+import { getRepository } from 'typeorm'
+
 import { Permission } from '@models/Permission'
 import { Role } from '@models/Role'
-import { getRepository } from 'typeorm'
 
 export const relationPermissionAndRoleTests = () => {
   describe('Relation with Permission and Role models', () => {
