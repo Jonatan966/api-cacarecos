@@ -56,9 +56,9 @@ export const roleRoutesTests = (req: request.SuperTest<request.Test>) => {
     it('Should be able to delete role', async () => {
       const reqResult = await req.get('/roles')
 
-      const createdPermission = reqResult.body.find(role => role.name === 'BOSS')
+      const createdRole = reqResult.body.find(role => role.name === 'BOSS')
 
-      await req.delete(`/roles/${createdPermission.id}`)
+      await req.delete(`/roles/${createdRole.id}`)
         .expect(200)
     })
 

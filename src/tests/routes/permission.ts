@@ -37,7 +37,7 @@ export const permissionRoutesTests = (req: request.SuperTest<request.Test>) => {
     it('Should be able to create a temporary permission for next tests', async () => {
       const existentPermissions = (await req.get('/permissions')).body
 
-      if (existentPermissions.find(permissions => permissions.name === 'ROUTES_TEST')) {
+      if (existentPermissions.find(permission => permission.name === 'ROUTES_TEST')) {
         return expect(1).toEqual(1)
       }
 
