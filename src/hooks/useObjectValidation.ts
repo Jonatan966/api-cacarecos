@@ -6,7 +6,7 @@ type IsError = {
 
 export async function useObjectValidation <T = any> (data: any, schema: yup.ObjectSchema<any>): Promise<T & IsError> {
   try {
-    return await schema.validate(data, { abortEarly: false })
+    return await schema.validate(data, { abortEarly: false, stripUnknown: true })
   } catch (error) {
     const errorMessages = {} as any
 
