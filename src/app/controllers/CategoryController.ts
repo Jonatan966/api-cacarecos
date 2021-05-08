@@ -4,11 +4,20 @@ import { getRepository } from 'typeorm'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
+import { useObjectValidation } from '@hooks/useObjectValidation'
 import { Category } from '@models/Category'
+
+import { CategoryProps, CategorySchema } from '../schemas/CategorySchema'
 
 export const CategoryController = {
   async create (req: Request, res: Response) {
-    const { name, color } = req.body
+    const { name, color, $isError } = await useObjectValidation<CategoryProps>(req.body, CategorySchema)
+
+    if ($isError) {
+      return useErrorMessage('invalid fields', 400, res, {
+        fields: { name, color }
+      })
+    }
 
     const insertedCategory = await useInsertOnlyNotExists({ name, color }, Category, { name })
 
