@@ -4,6 +4,7 @@ import { CategoryController } from '@controllers/CategoryController'
 import { PermissionController } from '@controllers/PermissionController'
 import { ProductController } from '@controllers/ProductController'
 import { RoleController } from '@controllers/RoleController'
+import { UserController } from '@controllers/UserController'
 
 const privateRoutes = Router()
 
@@ -22,5 +23,9 @@ privateRoutes.delete('/categories/:id', CategoryController.remove)
 privateRoutes.post('/products', ProductController.create)
 privateRoutes.delete('/products/:id', ProductController.remove)
 privateRoutes.put('/products/:id', ProductController.update)
+
+privateRoutes.get('/users', UserController.index)
+privateRoutes.get('/users/:id', UserController.show)
+privateRoutes.delete('/users/:id', UserController.remove)
 
 export { privateRoutes }
