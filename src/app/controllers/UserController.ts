@@ -26,7 +26,8 @@ export const UserController: Controller = {
 
     const insertedUser = await useInsertOnlyNotExists({
       ...body,
-      password: userHashedPassword
+      password: userHashedPassword,
+      loginId: generateUUID()
     }, User, { email: body.email })
 
     if (!insertedUser) {
