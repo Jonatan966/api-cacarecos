@@ -2,6 +2,7 @@ import supertest from 'supertest'
 
 import { app } from '../../app'
 import { connectToDatabase } from '../setup'
+import { authRoutesTests } from './auth'
 import { categoryRoutesTests } from './category'
 import { permissionRoutesTests } from './permission'
 import { productRouteTests } from './product'
@@ -17,3 +18,4 @@ roleRoutesTests(appRoutes)
 categoryRoutesTests(appRoutes)
 productRouteTests(appRoutes)
 UserRouteTests(appRoutes)
+authRoutesTests(appRoutes)
