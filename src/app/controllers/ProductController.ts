@@ -1,4 +1,4 @@
-import { Controller } from 'src/@types/Controller'
+import { DefaultController } from 'src/@types/Controller'
 import { getRepository } from 'typeorm'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
@@ -11,7 +11,7 @@ import { slugCreator } from '@utils/slugCreator'
 
 import { ProductProps, ProductSchema } from '../schemas/ProductSchema'
 
-export const ProductController: Controller<Product> = {
+export const ProductController: DefaultController<Product> = {
   async create (req, res) {
     const {
       $isError,

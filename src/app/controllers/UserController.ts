@@ -1,5 +1,6 @@
-import { Controller } from 'src/@types/Controller'
+import { DefaultController } from 'src/@types/Controller'
 import { getRepository } from 'typeorm'
+import { v4 as generateUUID } from 'uuid'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useHashString } from '@hooks/useHashString'
@@ -9,7 +10,7 @@ import { User } from '@models/User'
 
 import { UserProps, UserSchema } from '../schemas/UserSchema'
 
-export const UserController: Controller = {
+export const UserController: DefaultController = {
   async create (req, res) {
     const {
       $isError,
