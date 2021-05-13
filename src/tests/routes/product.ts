@@ -1,6 +1,6 @@
 import { RouteTest } from 'src/@types/RouteTest'
 
-export const productRouteTests: RouteTest = (req) => {
+export const productRoutesTests: RouteTest = (req) => {
   describe('Product route tests', () => {
     it('Should be able to insert a product', async () => {
       const category = (await req.get('/categories')).body[0].id

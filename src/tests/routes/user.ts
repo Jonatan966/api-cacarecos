@@ -1,6 +1,6 @@
 import { RouteTest } from 'src/@types/RouteTest'
 
-export const UserRouteTests: RouteTest = (req) => {
+export const userRoutesTests: RouteTest = (req) => {
   describe('User route tests', () => {
     it('Should be able to insert a user', async () => {
       await req.post('/users')
