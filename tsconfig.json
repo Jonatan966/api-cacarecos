@@ -23,7 +23,8 @@
       "@models/*": ["./src/app/models/*"],
       "@database/*": ["./src/database/*"],
       "@hooks/*": ["./src/hooks/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@utils/*": ["./src/utils/*"],
+      "@middlewares/*": ["./src/app/middlewares/*"]
     }
   },
   "include": [
