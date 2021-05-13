@@ -18,7 +18,3 @@ export interface DefaultController<T = any> {
   show?: (req: Request, res: NewResponse<T>) => Promise<NewResponse<T | ErrorObject>>;
   update?: (req: Request, res: NewResponse<T>) => Promise<NewResponse<T | ErrorObject>>;
 }
-
-export interface TemplateController {
-  [name: string]: (req: Request, res: NewResponse) => Promise<any>;
-}
