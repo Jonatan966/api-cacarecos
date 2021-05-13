@@ -1,11 +1,12 @@
 import { Request, Response } from 'express'
+import { DefaultController } from 'src/@types/Controller'
 import { getRepository } from 'typeorm'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
 import { Permission } from '@models/Permission'
 
-export const PermissionController = {
+export const PermissionController: DefaultController<Permission> = {
   async create (req: Request, res: Response) {
     const { name } = req.body
 

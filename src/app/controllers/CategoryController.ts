@@ -1,5 +1,5 @@
 
-import { Request, Response } from 'express'
+import { DefaultController } from 'src/@types/Controller'
 import { getRepository } from 'typeorm'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
@@ -9,8 +9,8 @@ import { Category } from '@models/Category'
 
 import { CategoryProps, CategorySchema } from '../schemas/CategorySchema'
 
-export const CategoryController = {
-  async create (req: Request, res: Response) {
+export const CategoryController: DefaultController<Category> = {
+  async create (req, res) {
     const { name, color, $isError } = await useObjectValidation<CategoryProps>(req.body, CategorySchema)
 
     if ($isError) {
@@ -30,7 +30,7 @@ export const CategoryController = {
       .json(insertedCategory)
   },
 
-  async remove (req: Request, res: Response) {
+  async remove (req, res) {
     const { id } = req.params
 
     const categoryRepository = getRepository(Category)
@@ -45,7 +45,7 @@ export const CategoryController = {
     return useErrorMessage('category does not exists', 400, res)
   },
 
-  async index (_req: Request, res: Response) {
+  async index (_req, res) {
     const categoryRepository = getRepository(Category)
 
     const categories = await categoryRepository.find()
@@ -53,7 +53,7 @@ export const CategoryController = {
     return res.json(categories)
   },
 
-  async show (req: Request, res: Response) {
+  async show (req, res) {
     const { id } = req.params
 
     const categoryRepository = getRepository(Category)
