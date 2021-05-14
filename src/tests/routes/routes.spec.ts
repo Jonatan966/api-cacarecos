@@ -6,6 +6,7 @@ import { authRoutesTests } from './auth'
 import { categoryRoutesTests } from './category'
 import { permissionRoutesTests } from './permission'
 import { productRoutesTests } from './product'
+import { ratingRoutesTests } from './rating'
 import { roleRoutesTests } from './role'
 import { userRoutesTests } from './user'
 
@@ -19,3 +20,4 @@ categoryRoutesTests(appRoutes)
 productRoutesTests(appRoutes)
 userRoutesTests(appRoutes)
 authRoutesTests(appRoutes)
+ratingRoutesTests(appRoutes)
