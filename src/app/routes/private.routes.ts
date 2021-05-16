@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import { AuthController } from '@controllers/AuthController'
 import { CategoryController } from '@controllers/CategoryController'
+import { OrderController } from '@controllers/OrderController'
 import { PermissionController } from '@controllers/PermissionController'
 import { ProductController } from '@controllers/ProductController'
 import { RatingController } from '@controllers/RatingController'
@@ -41,5 +42,18 @@ privateRoutes.delete('/products/:productId/ratings/:ratingId',
 privateRoutes.get('/users', UserController.index)
 privateRoutes.get('/users/:id', UserController.show)
 privateRoutes.delete('/users/:id', UserController.remove)
+
+privateRoutes.post('/orders',
+  AuthController.validate,
+  OrderController.create
+)
+privateRoutes.get('/orders',
+  AuthController.validate,
+  OrderController.index
+)
+privateRoutes.delete('/orders/:id',
+  AuthController.validate,
+  OrderController.remove
+)
 
 export { privateRoutes }
