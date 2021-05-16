@@ -56,7 +56,7 @@ export const orderModelTests = () => {
       const orderAlreadyExists = await orderRepository.find()
 
       if (orderAlreadyExists.length) {
-        expect(orderAlreadyExists).toHaveProperty('length', 1)
+        expect(orderAlreadyExists.length).toBeGreaterThanOrEqual(1)
         return
       }
 
