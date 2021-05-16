@@ -21,7 +21,10 @@
     "paths": {
       "@controllers/*": ["./src/app/controllers/*"],
       "@models/*": ["./src/app/models/*"],
-      "@database/*": ["./src/database/*"]
+      "@database/*": ["./src/database/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@middlewares/*": ["./src/app/middlewares/*"]
     }
   },
   "include": [

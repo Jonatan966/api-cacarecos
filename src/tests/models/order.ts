@@ -1,6 +1,7 @@
+import { getRepository } from 'typeorm'
+
 import { Order, OrderStatus } from '@models/Order'
 import { User } from '@models/User'
-import { getRepository } from 'typeorm'
 
 export const orderModelTests = () => {
   describe('Order Model tests', () => {
@@ -55,7 +56,7 @@ export const orderModelTests = () => {
       const orderAlreadyExists = await orderRepository.find()
 
       if (orderAlreadyExists.length) {
-        expect(orderAlreadyExists).toHaveProperty('length', 1)
+        expect(orderAlreadyExists.length).toBeGreaterThanOrEqual(1)
         return
       }
 

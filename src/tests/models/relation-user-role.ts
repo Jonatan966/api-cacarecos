@@ -1,6 +1,7 @@
+import { getRepository } from 'typeorm'
+
 import { Role } from '@models/Role'
 import { User } from '@models/User'
-import { getRepository } from 'typeorm'
 
 export const relationUserAndRoleTests = () => {
   describe('Relation with User and Role models', () => {

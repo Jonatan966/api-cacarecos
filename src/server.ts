@@ -1,3 +1,4 @@
+import './database/connect'
 import { app } from './app'
 
 const port = process.env.PORT || 3333

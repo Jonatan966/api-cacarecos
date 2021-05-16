@@ -1,5 +1,6 @@
-import { Product } from '@models/Product'
 import { getRepository } from 'typeorm'
+
+import { Product } from '@models/Product'
 
 export const relationRatingAndProductTests = () => {
   describe('Relation with Rating and Product models', () => {
@@ -10,7 +11,7 @@ export const relationRatingAndProductTests = () => {
         relations: ['ratings']
       })
 
-      expect(product[0].ratings).toHaveLength(1)
+      expect(product[0].ratings.length).toBeGreaterThanOrEqual(1)
     })
   })
 }

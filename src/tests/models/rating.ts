@@ -1,7 +1,8 @@
+import { getRepository } from 'typeorm'
+
 import { Product } from '@models/Product'
 import { Rating } from '@models/Rating'
 import { User } from '@models/User'
-import { getRepository } from 'typeorm'
 
 export const ratingModelTests = () => {
   describe('Rating model tests', () => {

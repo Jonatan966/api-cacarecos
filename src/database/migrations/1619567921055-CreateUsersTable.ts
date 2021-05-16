@@ -31,6 +31,11 @@ export class CreateUsersTable1619567921055 implements MigrationInterface {
           isNullable: false
         },
         {
+          name: 'login_id',
+          type: 'uuid',
+          isNullable: true
+        },
+        {
           name: 'created_at',
           type: 'timestamp',
           default: 'now()'

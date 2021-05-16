@@ -1,4 +1,5 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+
 import { Order } from './Order'
 import { Role } from './Role'
 
@@ -15,6 +16,9 @@ export class User {
 
   @Column({ select: false })
   password: string;
+
+  @Column({ name: 'login_id' })
+  loginId: string;
 
   @ManyToMany(() => Role)
   @JoinTable({
