@@ -1,0 +1,44 @@
+name: Jest tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test:
+    name: Test application
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:12.2
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: cacarecos_tests
+        ports: 
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.15.4'
+      
+      - name: Install dependencies
+        run: yarn
+      
+      - name: Run migrations
+        run: yarn typeorm-test migration:run
+      
+      - name: Run tests
+        env:
+          DATABASE_TESTS_URL: ${{ secrets.DATABASE_TESTS_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: yarn test
