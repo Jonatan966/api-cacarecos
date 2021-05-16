@@ -36,6 +36,8 @@ jobs:
         run: yarn
       
       - name: Run migrations
+        env:
+          DATABASE_TESTS_URL: ${{ secrets.DATABASE_TESTS_URL }}
         run: yarn typeorm-test migration:run
       
       - name: Run tests
