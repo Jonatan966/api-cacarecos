@@ -93,4 +93,3 @@ export const ImageUploadProvider = {
     }
   }
 }
-ImageUploadProvider.getImages('teste').then(console.log)
