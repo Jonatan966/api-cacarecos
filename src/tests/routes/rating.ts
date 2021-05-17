@@ -74,7 +74,7 @@ export const ratingRoutesTests: RouteTest = (req) => {
     })
 
     it('Should be able to create a temporary rating for next tests', async () => {
-      const product = (await req.get('/products')).body[1]
+      const product = (await req.get('/products')).body[0]
 
       const productRatings = (await req.get(`/products/${product.id}/ratings`)).body
 
