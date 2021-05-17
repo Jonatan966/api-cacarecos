@@ -49,19 +49,17 @@ export const ProductController: DefaultController<Product> = {
       .json(insertedProduct)
   },
 
-  async remove (req, res) {
-    const { id } = req.params
-
+  async remove (_req, res) {
     const productRepository = getRepository(Product)
 
-    const deleteResult = await productRepository.delete(id)
+    try {
+      await productRepository.remove([res.locals.product])
 
-    if (deleteResult.affected) {
       return res
         .sendStatus(200)
+    } catch {
+      return useErrorMessage('it is not possible to delete this product', 500, res)
     }
-
-    return useErrorMessage('product does not exists', 400, res)
   },
 
   async index (_req, res) {
