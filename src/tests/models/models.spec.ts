@@ -1,5 +1,6 @@
 import 'reflect-metadata'
 
+import { finishTests } from '../finishTests'
 import { connectToDatabase } from '../setup'
 import { categoryModelTests } from './category'
 import { orderModelTests } from './order'
@@ -32,3 +33,4 @@ relationProductAndOrderTests()
 ratingModelTests()
 relationRatingAndProductTests()
 relationRatingAndUserTests()
+finishTests()
