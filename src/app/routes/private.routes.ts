@@ -25,7 +25,10 @@ privateRoutes.post('/categories', CategoryController.create)
 privateRoutes.delete('/categories/:id', CategoryController.remove)
 
 privateRoutes.post('/products', ProductController.create)
-privateRoutes.delete('/products/:id', ProductController.remove)
+privateRoutes.delete('/products/:id',
+  checkProductMiddleware,
+  ProductController.remove
+)
 privateRoutes.put('/products/:id', ProductController.update)
 
 privateRoutes.post('/products/:productId/ratings',
