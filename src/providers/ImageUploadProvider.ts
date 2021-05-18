@@ -10,6 +10,7 @@ export interface ImageItem {
   url?: string;
   id?: string;
   failed?: string;
+  oldpath?: string;
 }
 
 export const ImageUploadProvider = {
@@ -25,7 +26,8 @@ export const ImageUploadProvider = {
 
       return {
         url: uploadResponse.secure_url,
-        id: uploadResponse.public_id
+        id: uploadResponse.public_id,
+        oldpath: imagePath
       }
     } catch {
       return null
