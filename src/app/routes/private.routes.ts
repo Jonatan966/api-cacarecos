@@ -10,6 +10,8 @@ import { RoleController } from '@controllers/RoleController'
 import { UserController } from '@controllers/UserController'
 import { checkProductMiddleware } from '@middlewares/CheckProductMiddleware'
 
+import { multerService } from '../services/multer'
+
 const privateRoutes = Router()
 
 privateRoutes.post('/permissions', PermissionController.create)
@@ -24,8 +26,14 @@ privateRoutes.patch('/roles/:id/permissions', RoleController.updateRolePermissio
 privateRoutes.post('/categories', CategoryController.create)
 privateRoutes.delete('/categories/:id', CategoryController.remove)
 
-privateRoutes.post('/products', ProductController.create)
-privateRoutes.delete('/products/:id', ProductController.remove)
+privateRoutes.post('/products',
+  multerService.array('product_images', 4),
+  ProductController.create
+)
+privateRoutes.delete('/products/:id',
+  checkProductMiddleware,
+  ProductController.remove
+)
 privateRoutes.put('/products/:id', ProductController.update)
 
 privateRoutes.post('/products/:productId/ratings',

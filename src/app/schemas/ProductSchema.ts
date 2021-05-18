@@ -8,7 +8,11 @@ export const ProductSchema = yup.object()
     other_details: yup.string(),
     price: yup.number().required(),
     units: yup.number().required(),
-    category: yup.string().required()
+    category: yup.string().required(),
+    main_image: yup.object({
+      type: yup.string().matches(/new|storaged/),
+      identifier: yup.string()
+    }).nullable()
   })
 
 export interface ProductProps {
@@ -19,4 +23,9 @@ export interface ProductProps {
   price: number;
   units: number;
   category: string;
+
+  main_image?: {
+    type: 'new' | 'storaged';
+    identifier: string;
+  }
 }

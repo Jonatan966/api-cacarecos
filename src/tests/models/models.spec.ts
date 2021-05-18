@@ -1,10 +1,12 @@
 import 'reflect-metadata'
 
+import { finishTests } from '../finishTests'
 import { connectToDatabase } from '../setup'
 import { categoryModelTests } from './category'
 import { orderModelTests } from './order'
 import { permissionModelTests } from './permission'
 import { productModelTests } from './product'
+import { productImageModelTests } from './product-image'
 import { ratingModelTests } from './rating'
 import { relationPermissionAndRoleTests } from './relation-permission-role'
 import { relationProductAndCategory } from './relation-product-category'
@@ -32,3 +34,5 @@ relationProductAndOrderTests()
 ratingModelTests()
 relationRatingAndProductTests()
 relationRatingAndUserTests()
+productImageModelTests()
+finishTests()

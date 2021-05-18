@@ -1,6 +1,7 @@
 import supertest from 'supertest'
 
 import { app } from '../../app'
+import { finishTests } from '../finishTests'
 import { connectToDatabase } from '../setup'
 import { authRoutesTests } from './auth'
 import { categoryRoutesTests } from './category'
@@ -23,3 +24,4 @@ userRoutesTests(appRoutes)
 authRoutesTests(appRoutes)
 ratingRoutesTests(appRoutes)
 orderRoutesTests(appRoutes)
+finishTests()

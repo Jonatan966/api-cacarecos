@@ -1,7 +1,10 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { BeforeRemove, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+
+import { ImageUploadProvider } from '@providers/ImageUploadProvider'
 
 import { Category } from './Category'
 import { OrderProduct } from './OrderProduct'
+import { ProductImage } from './ProductImage'
 import { Rating } from './Rating'
 
 @Entity('products')
@@ -28,6 +31,9 @@ export class Product {
   @OneToMany(() => OrderProduct, orderProduct => orderProduct.product)
   orderProducts: OrderProduct[];
 
+  @OneToMany(() => ProductImage, productImage => productImage.product, { cascade: true })
+  images: ProductImage[];
+
   @OneToMany(() => Rating, rating => rating.product)
   ratings: Rating[];
 
@@ -36,4 +42,9 @@ export class Product {
 
   @Column({ select: false })
   units: number;
+
+  @BeforeRemove()
+  async removeProductImages () {
+    await ImageUploadProvider.removeAll(this.id)
+  }
 }
