@@ -7,14 +7,13 @@ import { useObjectValidation } from '@hooks/useObjectValidation'
 import { Category } from '@models/Category'
 import { Product } from '@models/Product'
 import { ProductImage } from '@models/ProductImage'
-import { ImageUploadProvider, ImageItem } from '@providers/ImageUploadProvider'
+import { ImageUploadProvider } from '@providers/ImageUploadProvider'
 import { makeSchemaFieldsOptional } from '@utils/makeSchemaFieldsOptional'
 import { slugCreator } from '@utils/slugCreator'
 
 import { ProductProps, ProductSchema } from '../schemas/ProductSchema'
 
 interface ExtendedProduct extends Product {
-  images?: ImageItem[];
   main_image?: ProductImage;
 }
 
@@ -57,12 +56,12 @@ export const ProductController: DefaultController<ExtendedProduct> = {
       insertedProduct,
       main_image.identifier
     )
-    console.log(uploadResult)
+
     return res
       .status(201)
       .json({
         ...insertedProduct,
-        images: uploadResult
+        images: uploadResult as any
       })
   },
 
@@ -105,7 +104,9 @@ export const ProductController: DefaultController<ExtendedProduct> = {
 
     const productRepository = getRepository(Product)
 
-    const product = await productRepository.findOne(id)
+    const product = await productRepository.findOne(id, {
+      relations: ['images']
+    })
 
     if (product) {
       return res.status(200).json(product)

@@ -32,7 +32,7 @@ export class Product {
   orderProducts: OrderProduct[];
 
   @OneToMany(() => ProductImage, productImage => productImage.product, { cascade: true })
-  productImages: ProductImage[];
+  images: ProductImage[];
 
   @OneToMany(() => Rating, rating => rating.product)
   ratings: Rating[];
