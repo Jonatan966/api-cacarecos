@@ -32,7 +32,8 @@ export class CreateProductImagesTable1621294019129 implements MigrationInterface
           name: 'FKProductImage',
           columnNames: ['product_id'],
           referencedColumnNames: ['id'],
-          referencedTableName: 'products'
+          referencedTableName: 'products',
+          onDelete: 'CASCADE'
         }
       ]
     }))
