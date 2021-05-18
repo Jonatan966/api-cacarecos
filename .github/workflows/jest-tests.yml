@@ -44,4 +44,5 @@ jobs:
         env:
           DATABASE_TESTS_URL: ${{ secrets.DATABASE_TESTS_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
         run: yarn test
