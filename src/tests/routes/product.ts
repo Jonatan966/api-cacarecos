@@ -1,3 +1,4 @@
+import path from 'path'
 import { RouteTest } from 'src/@types/RouteTest'
 
 export const productRoutesTests: RouteTest = (req) => {
@@ -6,22 +7,27 @@ export const productRoutesTests: RouteTest = (req) => {
       const category = (await req.get('/categories')).body[0].id
 
       await req.post('/products')
-        .send({
+        .attach('product_images', path.join(__dirname, '..', 'files', 'test.png'))
+        .field({
           name: 'New test',
           description: 'The new test',
           slug: 'new-test',
           price: 250,
           units: 300,
+          'main_image["type"]': 'new',
+          'main_image["identifier"]': 'test.png',
           category
         })
         .expect(201)
         .expect(/"id":/)
+        .expect(/"images":\[{/)
     })
 
     it('Should be able to find created product', async () => {
       await req.get('/products')
         .expect(/"name":"New test"/)
         .expect(/"color":/)
+        .expect(/"main_image":{/)
     })
 
     it('Should be able to view product by id', async () => {
