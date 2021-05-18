@@ -6,15 +6,23 @@ import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
 import { useObjectValidation } from '@hooks/useObjectValidation'
 import { Category } from '@models/Category'
 import { Product } from '@models/Product'
+import { ProductImage } from '@models/ProductImage'
+import { ImageUploadProvider, ImageItem } from '@providers/ImageUploadProvider'
 import { makeSchemaFieldsOptional } from '@utils/makeSchemaFieldsOptional'
 import { slugCreator } from '@utils/slugCreator'
 
 import { ProductProps, ProductSchema } from '../schemas/ProductSchema'
 
-export const ProductController: DefaultController<Product> = {
+interface ExtendedProduct extends Product {
+  images?: ImageItem[];
+  main_image?: ProductImage;
+}
+
+export const ProductController: DefaultController<ExtendedProduct> = {
   async create (req, res) {
     const {
       $isError,
+      main_image,
       ...body
     } = await useObjectValidation<ProductProps>(req.body, ProductSchema)
 
@@ -44,9 +52,18 @@ export const ProductController: DefaultController<Product> = {
       return useErrorMessage('there is already a product with that name', 400, res)
     }
 
+    const uploadResult = await _uploadProductImages(
+      req.files as any ?? [],
+      insertedProduct,
+      main_image.identifier
+    )
+    console.log(uploadResult)
     return res
       .status(201)
-      .json(insertedProduct)
+      .json({
+        ...insertedProduct,
+        images: uploadResult
+      })
   },
 
   async remove (_req, res) {
@@ -64,12 +81,23 @@ export const ProductController: DefaultController<Product> = {
 
   async index (_req, res) {
     const productRepository = getRepository(Product)
+    const productImageRepository = getRepository(ProductImage)
 
     const products = await productRepository.find()
+    const productsImages = await productImageRepository.find({
+      where: products.map(product => ({ product, primary: true }))
+    })
+
+    const productsWithImage = products.map(product => ({
+      ...product,
+      main_image: productsImages.find(productImages =>
+        productImages.id.includes(product.id)
+      )
+    }))
 
     return res
       .status(200)
-      .json(products)
+      .json(productsWithImage as any)
   },
 
   async show (req, res) {
@@ -90,6 +118,7 @@ export const ProductController: DefaultController<Product> = {
     const { id: productId } = req.params
     const {
       $isError,
+      main_image,
       ...body
     } = await useObjectValidation<Partial<ProductProps>>(req.body, makeSchemaFieldsOptional(ProductSchema))
 
@@ -98,6 +127,8 @@ export const ProductController: DefaultController<Product> = {
         fields: body
       })
     }
+
+    console.log(main_image)
 
     const categoryRepository = getRepository(Category)
     const productRepository = getRepository(Product)
@@ -127,5 +158,36 @@ export const ProductController: DefaultController<Product> = {
     return res
       .status(200)
       .json(updatedProductResult)
+  }
+}
+
+async function _uploadProductImages (imageFiles: Express.Multer.File[], product: Product, mainImageFilename: string) {
+  const productImageRepository = getRepository(ProductImage)
+
+  const formatedImageFiles = imageFiles.map(imageFile => ({
+    path: imageFile.path,
+    originalname: imageFile.originalname
+  }))
+
+  if (formatedImageFiles.length) {
+    const uploadResult = await ImageUploadProvider.uploadMany(product.id,
+      formatedImageFiles.map(imageFile => imageFile.path)
+    )
+    const onlyUploadedImages = uploadResult.filter(imageItem => !imageItem.failed)
+
+    await productImageRepository.save(
+      onlyUploadedImages.map(uploadedImage =>
+        ({
+          id: uploadedImage.id,
+          url: uploadedImage.url,
+          product,
+          primary: formatedImageFiles.find(imageFile =>
+            imageFile.path === uploadedImage.oldpath
+          ).originalname === mainImageFilename
+        })
+      )
+    )
+
+    return uploadResult.map(uploadedItem => ({ url: uploadedItem.url, id: uploadedItem.id }))
   }
 }
