@@ -4,6 +4,7 @@ import { ImageUploadProvider } from '@providers/ImageUploadProvider'
 
 import { Category } from './Category'
 import { OrderProduct } from './OrderProduct'
+import { ProductImage } from './ProductImage'
 import { Rating } from './Rating'
 
 @Entity('products')
@@ -29,6 +30,9 @@ export class Product {
 
   @OneToMany(() => OrderProduct, orderProduct => orderProduct.product)
   orderProducts: OrderProduct[];
+
+  @OneToMany(() => ProductImage, productImage => productImage.product, { cascade: true })
+  productImages: ProductImage[];
 
   @OneToMany(() => Rating, rating => rating.product)
   ratings: Rating[];

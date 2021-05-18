@@ -13,7 +13,7 @@ export class ProductImage {
   @Column()
   primary: boolean;
 
-  @ManyToOne(() => Product)
+  @ManyToOne(() => Product, product => product.productImages)
   @JoinColumn({ name: 'product_id' })
   product: Product;
 }
