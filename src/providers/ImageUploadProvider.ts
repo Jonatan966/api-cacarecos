@@ -6,9 +6,10 @@ import { wait } from '@utils/wait'
 
 const WORKFOLDER = 'cacarecos'
 
-interface ImageItem {
-  url: string;
-  id: string;
+export interface ImageItem {
+  url?: string;
+  id?: string;
+  failed?: string;
 }
 
 export const ImageUploadProvider = {
@@ -32,7 +33,7 @@ export const ImageUploadProvider = {
   },
 
   async uploadMany (entityId: string, imagePaths: string[]) {
-    const finalResponse = []
+    const finalResponse: ImageItem[] = []
 
     for (const imagePath of imagePaths) {
       const uploadResponse = await ImageUploadProvider.uploadOne(entityId, imagePath)
