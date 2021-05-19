@@ -1,9 +1,9 @@
 
 import { NextFunction, Request } from 'express'
-import { NewResponse } from 'src/@types/Controller'
 import { getRepository } from 'typeorm'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
+import { NewResponse } from '@interfaces//Controller'
 import { Product } from '@models/Product'
 
 export async function checkProductMiddleware (req: Request, res: NewResponse, next: NextFunction) {

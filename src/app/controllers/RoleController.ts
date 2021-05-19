@@ -1,16 +1,18 @@
-import { Request, Response } from 'express'
+import { Request } from 'express'
 import { getRepository } from 'typeorm'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
 import { useObjectValidation } from '@hooks/useObjectValidation'
+import { AutoBindClass } from '@interfaces/AutoBind'
+import { AppControllerProps, NewResponse } from '@interfaces/Controller'
 import { Permission } from '@models/Permission'
 import { Role } from '@models/Role'
 
 import { RoleProps, RoleSchema } from '../schemas/RoleSchema'
 
-export const RoleController = {
-  async create (req: Request, res: Response) {
+class RoleControllerClass extends AutoBindClass implements AppControllerProps {
+  async create (req: Request, res: NewResponse) {
     const { name, permissions, $isError } = await useObjectValidation<RoleProps>(req.body, RoleSchema)
     const permissionRepo = getRepository(Permission)
 
@@ -36,9 +38,9 @@ export const RoleController = {
     return res
       .status(201)
       .json(insertResult)
-  },
+  }
 
-  async index (_req: Request, res: Response) {
+  async index (_req: Request, res: NewResponse) {
     const roleRepository = getRepository(Role)
 
     const roles = await roleRepository.find({
@@ -46,9 +48,9 @@ export const RoleController = {
     })
 
     return res.json(roles)
-  },
+  }
 
-  async remove (req: Request, res: Response) {
+  async remove (req: Request, res: NewResponse) {
     const { id } = req.params
 
     const roleRepository = getRepository(Role)
@@ -61,9 +63,9 @@ export const RoleController = {
     }
 
     return useErrorMessage('role does not exists', 400, res)
-  },
+  }
 
-  async updateRolePermissions (req: Request, res: Response) {
+  async updateRolePermissions (req: Request, res: NewResponse) {
     const roleRepository = getRepository(Role)
     const permissionRepository = getRepository(Permission)
 
@@ -93,3 +95,5 @@ export const RoleController = {
     return res.status(200).json(findedRole)
   }
 }
+
+export const RoleController = new RoleControllerClass()

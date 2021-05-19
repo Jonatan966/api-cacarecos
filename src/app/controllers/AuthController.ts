@@ -1,19 +1,20 @@
 import { compare } from 'bcrypt'
 import { NextFunction, Request } from 'express'
 import jwt from 'jsonwebtoken'
-import { NewResponse } from 'src/@types/Controller'
 import { getRepository } from 'typeorm'
 import { v4 as generateUUID } from 'uuid'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useObjectValidation } from '@hooks/useObjectValidation'
+import { AutoBindClass } from '@interfaces/AutoBind'
+import { NewResponse } from '@interfaces/Controller'
 import { User } from '@models/User'
 
 import { AuthSchemaProps, AuthSchema } from '../schemas/AuthSchema'
 
-export const AuthController = {
+class AuthControllerClass extends AutoBindClass {
   async logIn (req: Request, res: NewResponse) {
-    const user = await AuthController._searchUserByLogin(req.body, res)
+    const user = await this._searchUserByLogin(req.body, res)
 
     if (!user) {
       return
@@ -27,28 +28,28 @@ export const AuthController = {
       .send({
         token: loginToken
       })
-  },
+  }
 
   async logOut (req: Request, res: NewResponse) {
-    const regenerateSuccess = await AuthController._regenerateUserLoginId(res.locals.user.id)
+    const regenerateSuccess = await this._regenerateUserLoginId(res.locals.user.id)
 
     if (!regenerateSuccess) {
       return useErrorMessage('internal error when trying to log out', 500, res)
     }
 
     return res.status(200).send()
-  },
+  }
 
   async validate (req: Request, res: NewResponse, next: NextFunction) {
     const { token } = req.cookies
 
-    const decodedToken = await AuthController._checkAndOpenToken(token, res)
+    const decodedToken = await this._checkAndOpenToken(token, res)
 
     if (!decodedToken) {
       return
     }
 
-    const user = await AuthController._searchUserById(decodedToken.sub, res)
+    const user = await this._searchUserById(decodedToken.sub, res)
 
     if (!user) {
       return
@@ -58,9 +59,9 @@ export const AuthController = {
 
     next()
     return true
-  },
+  }
 
-  async _searchUserByLogin (body: any, res: NewResponse) {
+  private async _searchUserByLogin (body: any, res: NewResponse) {
     const { email, password, $isError } = await useObjectValidation<AuthSchemaProps>(body, AuthSchema)
 
     if ($isError) {
@@ -92,9 +93,9 @@ export const AuthController = {
     }
 
     return user
-  },
+  }
 
-  async _searchUserById (loginId: string, res: NewResponse) {
+  private async _searchUserById (loginId: string, res: NewResponse) {
     const userRepository = getRepository(User)
 
     const user = await userRepository.findOne({ loginId }, {
@@ -108,9 +109,9 @@ export const AuthController = {
     }
 
     return user
-  },
+  }
 
-  async _checkAndOpenToken (token: string, res: NewResponse) {
+  private async _checkAndOpenToken (token: string, res: NewResponse) {
     try {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
 
@@ -118,9 +119,9 @@ export const AuthController = {
     } catch {
       useErrorMessage('token is invalid', 400, res)
     }
-  },
+  }
 
-  async _regenerateUserLoginId (userId: string) {
+  private async _regenerateUserLoginId (userId: string) {
     const userRepository = getRepository(User)
 
     const result = await userRepository.update(userId, {
@@ -130,3 +131,5 @@ export const AuthController = {
     return !!result.affected
   }
 }
+
+export const AuthController = new AuthControllerClass()
