@@ -1,4 +1,4 @@
-import { RouteTest } from 'src/@types/RouteTest'
+import { RouteTest } from '@interfaces/RouteTest'
 
 export const authRoutesTests: RouteTest = (req) => {
   describe('Auth routes tests', () => {

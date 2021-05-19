@@ -1,4 +1,4 @@
-import { RouteTest } from 'src/@types/RouteTest'
+import { RouteTest } from '@interfaces/RouteTest'
 
 export const ratingRoutesTests: RouteTest = (req) => {
   describe('Rating routes tests', () => {
