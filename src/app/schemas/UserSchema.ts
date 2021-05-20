@@ -7,7 +7,7 @@ export const UserSchema = yup.object()
     password: yup.string().required()
   })
 
-export interface UserProps {
+export interface UserSchemaProps {
   name: string;
   email: string;
   password: string;

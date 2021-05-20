@@ -9,11 +9,11 @@ import { AppControllerProps, NewResponse } from '@interfaces//Controller'
 import { AutoBindClass } from '@interfaces/AutoBind'
 import { Rating } from '@models/Rating'
 
-import { RatingProps, RatingSchema } from '../schemas/RatingSchema'
+import { RatingSchemaProps, RatingSchema } from '../schemas/RatingSchema'
 
 class RatingControllerClass extends AutoBindClass implements AppControllerProps {
   async create (req: Request, res: NewResponse) {
-    const { $isError, ...body } = await useObjectValidation<RatingProps>(req.body, RatingSchema)
+    const { $isError, ...body } = await useObjectValidation<RatingSchemaProps>(req.body, RatingSchema)
 
     if ($isError) {
       return useErrorMessage('invalid fields', 400, res, {

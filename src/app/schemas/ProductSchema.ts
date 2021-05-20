@@ -15,7 +15,7 @@ export const ProductSchema = yup.object()
     }).nullable()
   })
 
-export interface ProductProps {
+export interface ProductSchemaProps {
   name: string;
   slug: string;
   description: string;

@@ -6,7 +6,7 @@ export const CategorySchema = yup.object()
     color: yup.string().required()
   })
 
-export interface CategoryProps {
+export interface CategorySchemaProps {
   name: string;
   color: string;
 }

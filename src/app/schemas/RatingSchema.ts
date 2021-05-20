@@ -5,7 +5,7 @@ export const RatingSchema = object().shape({
   content: string().required()
 })
 
-export interface RatingProps {
+export interface RatingSchemaProps {
   stars: number;
   content: string;
 }

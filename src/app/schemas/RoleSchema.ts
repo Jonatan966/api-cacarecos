@@ -6,7 +6,7 @@ export const RoleSchema = yup.object()
     permissions: yup.array().of(yup.string()).required()
   })
 
-export interface RoleProps {
+export interface RoleSchemaProps {
   name: string;
   permissions: string[];
 }
