@@ -1,14 +1,21 @@
-import * as yup from 'yup'
+import { object, string } from 'yup'
 
-export const UserSchema = yup.object()
+import { AppObjectSchemaProps } from '@interfaces/Schema'
+
+const UserYupSchema = object()
   .shape({
-    name: yup.string().required(),
-    email: yup.string().required(),
-    password: yup.string().required()
+    name: string().required(),
+    email: string().required(),
+    password: string().required()
   })
 
-export interface UserProps {
+class UserSchemaTypes {
   name: string;
   email: string;
   password: string;
+}
+
+export const UserObjectSchema: AppObjectSchemaProps<typeof UserSchemaTypes.prototype> = {
+  Types: UserSchemaTypes.prototype,
+  YupSchema: UserYupSchema
 }

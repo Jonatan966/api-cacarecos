@@ -1,13 +1,14 @@
-import { Request, Response } from 'express'
-import { DefaultController } from 'src/@types/Controller'
+import { Request } from 'express'
 import { getRepository } from 'typeorm'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
+import { AppControllerProps, NewResponse } from '@interfaces//Controller'
+import { AutoBindClass } from '@interfaces/AutoBind'
 import { Permission } from '@models/Permission'
 
-export const PermissionController: DefaultController<Permission> = {
-  async create (req: Request, res: Response) {
+class PermissionControllerClass extends AutoBindClass implements AppControllerProps {
+  async create (req: Request, res: NewResponse) {
     const { name } = req.body
 
     const insertedPermission = await useInsertOnlyNotExists({ name }, Permission, { name })
@@ -19,9 +20,9 @@ export const PermissionController: DefaultController<Permission> = {
     return res
       .status(201)
       .json(insertedPermission)
-  },
+  }
 
-  async remove (req: Request, res: Response) {
+  async remove (req: Request, res: NewResponse) {
     const { id } = req.params
 
     const permissionRepository = getRepository(Permission)
@@ -34,9 +35,9 @@ export const PermissionController: DefaultController<Permission> = {
     }
 
     return useErrorMessage('permission does not exists', 400, res)
-  },
+  }
 
-  async index (_req: Request, res: Response) {
+  async index (_req: Request, res: NewResponse) {
     const permissionRepository = getRepository(Permission)
 
     const permissions = await permissionRepository.find()
@@ -44,3 +45,5 @@ export const PermissionController: DefaultController<Permission> = {
     return res.json(permissions)
   }
 }
+
+export const PermissionController = new PermissionControllerClass()

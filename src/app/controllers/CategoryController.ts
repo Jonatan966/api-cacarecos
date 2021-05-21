@@ -1,17 +1,18 @@
-
-import { DefaultController } from 'src/@types/Controller'
+import { Request } from 'express'
 import { getRepository } from 'typeorm'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
 import { useObjectValidation } from '@hooks/useObjectValidation'
+import { AutoBindClass } from '@interfaces/AutoBind'
+import { AppControllerProps, NewResponse } from '@interfaces/Controller'
 import { Category } from '@models/Category'
 
-import { CategoryProps, CategorySchema } from '../schemas/CategorySchema'
+import { CategoryObjectSchema } from '../schemas/CategorySchema'
 
-export const CategoryController: DefaultController<Category> = {
-  async create (req, res) {
-    const { name, color, $isError } = await useObjectValidation<CategoryProps>(req.body, CategorySchema)
+class CategoryControllerClass extends AutoBindClass implements AppControllerProps {
+  async create (req: Request, res: NewResponse) {
+    const { name, color, $isError } = await useObjectValidation(req.body, CategoryObjectSchema)
 
     if ($isError) {
       return useErrorMessage('invalid fields', 400, res, {
@@ -28,9 +29,9 @@ export const CategoryController: DefaultController<Category> = {
     return res
       .status(201)
       .json(insertedCategory)
-  },
+  }
 
-  async remove (req, res) {
+  async remove (req: Request, res: NewResponse) {
     const { id } = req.params
 
     const categoryRepository = getRepository(Category)
@@ -43,17 +44,17 @@ export const CategoryController: DefaultController<Category> = {
     }
 
     return useErrorMessage('category does not exists', 400, res)
-  },
+  }
 
-  async index (_req, res) {
+  async index (_req: Request, res: NewResponse) {
     const categoryRepository = getRepository(Category)
 
     const categories = await categoryRepository.find()
 
     return res.json(categories)
-  },
+  }
 
-  async show (req, res) {
+  async show (req: Request, res: NewResponse) {
     const { id } = req.params
 
     const categoryRepository = getRepository(Category)
@@ -67,3 +68,5 @@ export const CategoryController: DefaultController<Category> = {
     return useErrorMessage('category does not exists', 400, res)
   }
 }
+
+export const CategoryController = new CategoryControllerClass()

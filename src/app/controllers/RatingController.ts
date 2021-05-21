@@ -1,16 +1,19 @@
-import { DefaultController } from 'src/@types/Controller'
+
+import { Request } from 'express'
 import { getRepository } from 'typeorm'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
 import { useObjectValidation } from '@hooks/useObjectValidation'
+import { AppControllerProps, NewResponse } from '@interfaces//Controller'
+import { AutoBindClass } from '@interfaces/AutoBind'
 import { Rating } from '@models/Rating'
 
-import { RatingProps, RatingSchema } from '../schemas/RatingSchema'
+import { RatingObjectSchema } from '../schemas/RatingSchema'
 
-export const RatingController: DefaultController<Rating> = {
-  async create (req, res) {
-    const { $isError, ...body } = await useObjectValidation<RatingProps>(req.body, RatingSchema)
+class RatingControllerClass extends AutoBindClass implements AppControllerProps {
+  async create (req: Request, res: NewResponse) {
+    const { $isError, ...body } = await useObjectValidation(req.body, RatingObjectSchema)
 
     if ($isError) {
       return useErrorMessage('invalid fields', 400, res, {
@@ -38,9 +41,9 @@ export const RatingController: DefaultController<Rating> = {
     return res
       .status(201)
       .json(insertedRating)
-  },
+  }
 
-  async remove (req, res) {
+  async remove (req: Request, res: NewResponse) {
     const { ratingId } = req.params
 
     const ratingRepository = getRepository(Rating)
@@ -57,9 +60,9 @@ export const RatingController: DefaultController<Rating> = {
     }
 
     return useErrorMessage('rating does not exists or does not belong to that product', 400, res)
-  },
+  }
 
-  async index (_req, res) {
+  async index (_req: Request, res: NewResponse) {
     const ratingRepository = getRepository(Rating)
 
     const ratings = await ratingRepository.find({
@@ -67,9 +70,9 @@ export const RatingController: DefaultController<Rating> = {
     })
 
     return res.json(ratings)
-  },
+  }
 
-  async show (req, res) {
+  async show (req: Request, res: NewResponse) {
     const { ratingId } = req.params
 
     const ratingRepository = getRepository(Rating)
@@ -86,3 +89,5 @@ export const RatingController: DefaultController<Rating> = {
     return useErrorMessage('rating does not exists or does not belong to that product', 400, res)
   }
 }
+
+export const RatingController = new RatingControllerClass()

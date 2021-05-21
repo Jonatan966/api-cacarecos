@@ -1,4 +1,5 @@
-import { DefaultController } from 'src/@types/Controller'
+
+import { Request } from 'express'
 import { getRepository } from 'typeorm'
 import { v4 as generateUUID } from 'uuid'
 
@@ -6,16 +7,18 @@ import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useHashString } from '@hooks/useHashString'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
 import { useObjectValidation } from '@hooks/useObjectValidation'
+import { AppControllerProps, NewResponse } from '@interfaces//Controller'
+import { AutoBindClass } from '@interfaces/AutoBind'
 import { User } from '@models/User'
 
-import { UserProps, UserSchema } from '../schemas/UserSchema'
+import { UserObjectSchema } from '../schemas/UserSchema'
 
-export const UserController: DefaultController = {
-  async create (req, res) {
+class UserControllerClass extends AutoBindClass implements AppControllerProps {
+  async create (req: Request, res: NewResponse) {
     const {
       $isError,
       ...body
-    } = await useObjectValidation<UserProps>(req.body, UserSchema)
+    } = await useObjectValidation(req.body, UserObjectSchema)
 
     if ($isError) {
       return useErrorMessage('invalid fields', 400, res, {
@@ -39,9 +42,9 @@ export const UserController: DefaultController = {
 
     return res.status(201)
       .json(insertedUser)
-  },
+  }
 
-  async remove (req, res) {
+  async remove (req: Request, res: NewResponse) {
     const { id } = req.params
 
     const userRepository = getRepository(User)
@@ -54,17 +57,17 @@ export const UserController: DefaultController = {
     }
 
     return useErrorMessage('user does not exists', 400, res)
-  },
+  }
 
-  async index (_req, res) {
+  async index (_req: Request, res: NewResponse) {
     const userRepository = getRepository(User)
 
     const users = await userRepository.find({ relations: ['roles'] })
 
     return res.json(users)
-  },
+  }
 
-  async show (req, res) {
+  async show (req: Request, res: NewResponse) {
     const { id } = req.params
 
     const userRepository = getRepository(User)
@@ -81,3 +84,5 @@ export const UserController: DefaultController = {
     return useErrorMessage('user does not exists', 400, res)
   }
 }
+
+export const UserController = new UserControllerClass()

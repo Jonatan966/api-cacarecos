@@ -8,60 +8,90 @@ import { ProductController } from '@controllers/ProductController'
 import { RatingController } from '@controllers/RatingController'
 import { RoleController } from '@controllers/RoleController'
 import { UserController } from '@controllers/UserController'
+import { RouteList } from '@interfaces/RouteList'
 import { checkProductMiddleware } from '@middlewares/CheckProductMiddleware'
+import { loadRoutes } from '@utils/loadRoutes'
 
 import { multerService } from '../services/multer'
 
 const privateRoutes = Router()
 
-privateRoutes.post('/permissions', PermissionController.create)
-privateRoutes.delete('/permissions/:id', PermissionController.remove)
-privateRoutes.get('/permissions', PermissionController.index)
+const routes: RouteList = {
+  '/permissions': {
+    post: PermissionController.create,
+    get: PermissionController.index
+  },
+  '/permissions/:id': {
+    delete: PermissionController.remove
+  },
+  '/roles': {
+    post: RoleController.create,
+    get: RoleController.index
+  },
+  '/roles/:id': {
+    delete: RoleController.remove
+  },
+  '/roles/:id/permissions': {
+    patch: RoleController.updateRolePermissions
+  },
+  '/categories': {
+    post: CategoryController.create
+  },
+  '/categories/:id': {
+    delete: CategoryController.remove
+  },
+  '/products': {
+    post: [
+      multerService.array('product_images', 4),
+      ProductController.create
+    ]
+  },
+  '/products/:id': {
+    delete: [
+      checkProductMiddleware,
+      ProductController.remove
+    ],
+    put: ProductController.update
+  },
+  '/products/:productId/ratings': {
+    post: [
+      checkProductMiddleware,
+      AuthController.validate,
+      RatingController.create
+    ]
+  },
+  '/products/:productId/ratings/:ratingId': {
+    delete: [
+      checkProductMiddleware,
+      AuthController.validate,
+      RatingController.remove
+    ]
+  },
+  '/users': {
+    get: UserController.index
+  },
+  '/users/:id': {
+    get: UserController.show,
+    delete: UserController.remove
+  },
+  '/orders': {
+    post: [
+      AuthController.validate,
+      OrderController.create
+    ],
+    get: [
+      AuthController.validate,
+      OrderController.index
+    ]
+  },
+  '/orders/:id': {
+    delete: [
+      AuthController.validate,
+      OrderController.remove
+    ]
+  }
+}
 
-privateRoutes.post('/roles', RoleController.create)
-privateRoutes.get('/roles', RoleController.index)
-privateRoutes.delete('/roles/:id', RoleController.remove)
-privateRoutes.patch('/roles/:id/permissions', RoleController.updateRolePermissions)
-
-privateRoutes.post('/categories', CategoryController.create)
-privateRoutes.delete('/categories/:id', CategoryController.remove)
-
-privateRoutes.post('/products',
-  multerService.array('product_images', 4),
-  ProductController.create
-)
-privateRoutes.delete('/products/:id',
-  checkProductMiddleware,
-  ProductController.remove
-)
-privateRoutes.put('/products/:id', ProductController.update)
-
-privateRoutes.post('/products/:productId/ratings',
-  checkProductMiddleware,
-  AuthController.validate,
-  RatingController.create
-)
-privateRoutes.delete('/products/:productId/ratings/:ratingId',
-  checkProductMiddleware,
-  AuthController.validate,
-  RatingController.remove
-)
-
-privateRoutes.get('/users', UserController.index)
-privateRoutes.get('/users/:id', UserController.show)
-privateRoutes.delete('/users/:id', UserController.remove)
-
-privateRoutes.post('/orders',
-  AuthController.validate,
-  OrderController.create
-)
-privateRoutes.get('/orders',
-  AuthController.validate,
-  OrderController.index
-)
-privateRoutes.delete('/orders/:id',
-  AuthController.validate,
-  OrderController.remove
-)
+loadRoutes(routes, privateRoutes)
 
 export { privateRoutes }

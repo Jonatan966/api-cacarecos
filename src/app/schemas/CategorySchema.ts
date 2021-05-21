@@ -1,12 +1,19 @@
-import * as yup from 'yup'
+import { object, string } from 'yup'
 
-export const CategorySchema = yup.object()
+import { AppObjectSchemaProps } from '@interfaces/Schema'
+
+const CategoryYupSchema = object()
   .shape({
-    name: yup.string().required(),
-    color: yup.string().required()
+    name: string().required(),
+    color: string().required()
   })
 
-export interface CategoryProps {
+class CategorySchemaTypes {
   name: string;
   color: string;
+}
+
+export const CategoryObjectSchema: AppObjectSchemaProps<typeof CategorySchemaTypes.prototype> = {
+  Types: CategorySchemaTypes.prototype,
+  YupSchema: CategoryYupSchema
 }
