@@ -14,7 +14,7 @@ import { ImageUploadProvider } from '@providers/ImageUploadProvider'
 import { makeSchemaFieldsOptional } from '@utils/makeSchemaFieldsOptional'
 import { slugCreator } from '@utils/slugCreator'
 
-import { ProductSchemaProps, ProductSchema } from '../schemas/ProductSchema'
+import { ProductObjectSchema } from '../schemas/ProductSchema'
 
 class ProductControllerClass extends AutoBindClass {
   async create (req: Request, res: NewResponse) {
@@ -22,7 +22,7 @@ class ProductControllerClass extends AutoBindClass {
       $isError,
       main_image,
       ...body
-    } = await useObjectValidation<ProductSchemaProps>(req.body, ProductSchema)
+    } = await useObjectValidation(req.body, ProductObjectSchema)
 
     if ($isError) {
       return useErrorMessage('invalid fields', 400, res, {
@@ -120,7 +120,10 @@ class ProductControllerClass extends AutoBindClass {
       $isError,
       main_image,
       ...body
-    } = await useObjectValidation<Partial<ProductSchemaProps>>(req.body, makeSchemaFieldsOptional(ProductSchema))
+    } = await useObjectValidation(req.body, {
+      ...ProductObjectSchema,
+      YupSchema: makeSchemaFieldsOptional(ProductObjectSchema.YupSchema)
+    })
 
     if ($isError) {
       return useErrorMessage('invalid fields', 400, res, {

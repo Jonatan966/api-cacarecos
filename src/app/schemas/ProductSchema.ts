@@ -1,6 +1,8 @@
 import * as yup from 'yup'
 
-export const ProductSchema = yup.object()
+import { AppObjectSchemaProps } from '@interfaces/Schema'
+
+const ProductYupSchema = yup.object()
   .shape({
     name: yup.string().required(),
     slug: yup.string().required(),
@@ -15,7 +17,7 @@ export const ProductSchema = yup.object()
     }).nullable()
   })
 
-export interface ProductSchemaProps {
+class ProductSchemaTypes {
   name: string;
   slug: string;
   description: string;
@@ -28,4 +30,9 @@ export interface ProductSchemaProps {
     type: 'new' | 'storaged';
     identifier: string;
   }
+}
+
+export const ProductObjectSchema: AppObjectSchemaProps<typeof ProductSchemaTypes.prototype> = {
+  Types: ProductSchemaTypes.prototype,
+  YupSchema: ProductYupSchema
 }

@@ -1,12 +1,19 @@
-import * as yup from 'yup'
+import { array, object, string } from 'yup'
 
-export const RoleSchema = yup.object()
+import { AppObjectSchemaProps } from '@interfaces/Schema'
+
+const RoleYupSchema = object()
   .shape({
-    name: yup.string().required(),
-    permissions: yup.array().of(yup.string()).required()
+    name: string().required(),
+    permissions: array().of(string()).required()
   })
 
-export interface RoleSchemaProps {
+class RoleSchemaTypes {
   name: string;
   permissions: string[];
+}
+
+export const RoleObjectSchema: AppObjectSchemaProps<typeof RoleSchemaTypes.prototype> = {
+  Types: RoleSchemaTypes.prototype,
+  YupSchema: RoleYupSchema
 }

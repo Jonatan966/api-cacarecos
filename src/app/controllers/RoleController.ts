@@ -9,11 +9,11 @@ import { AppControllerProps, NewResponse } from '@interfaces/Controller'
 import { Permission } from '@models/Permission'
 import { Role } from '@models/Role'
 
-import { RoleSchemaProps, RoleSchema } from '../schemas/RoleSchema'
+import { RoleObjectSchema } from '../schemas/RoleSchema'
 
 class RoleControllerClass extends AutoBindClass implements AppControllerProps {
   async create (req: Request, res: NewResponse) {
-    const { name, permissions, $isError } = await useObjectValidation<RoleSchemaProps>(req.body, RoleSchema)
+    const { name, permissions, $isError } = await useObjectValidation(req.body, RoleObjectSchema)
     const permissionRepo = getRepository(Permission)
 
     if ($isError) {
@@ -70,7 +70,10 @@ class RoleControllerClass extends AutoBindClass implements AppControllerProps {
     const permissionRepository = getRepository(Permission)
 
     const { id } = req.params
-    const { permissions, $isError } = await useObjectValidation<Omit<RoleSchemaProps, 'name'>>(req.body, RoleSchema.omit(['name']))
+    const { permissions, $isError } = await useObjectValidation(req.body, {
+      ...RoleObjectSchema,
+      YupSchema: RoleObjectSchema.YupSchema.omit(['name'])
+    })
 
     if ($isError) {
       return useErrorMessage('invalid fields', 400, res, {

@@ -10,7 +10,7 @@ import { AutoBindClass } from '@interfaces/AutoBind'
 import { NewResponse } from '@interfaces/Controller'
 import { User } from '@models/User'
 
-import { AuthSchemaProps, AuthSchema } from '../schemas/AuthSchema'
+import { AuthObjectSchema } from '../schemas/AuthSchema'
 
 class AuthControllerClass extends AutoBindClass {
   async logIn (req: Request, res: NewResponse) {
@@ -62,7 +62,7 @@ class AuthControllerClass extends AutoBindClass {
   }
 
   private async _searchUserByLogin (body: any, res: NewResponse) {
-    const { email, password, $isError } = await useObjectValidation<AuthSchemaProps>(body, AuthSchema)
+    const { email, password, $isError } = await useObjectValidation(body, AuthObjectSchema)
 
     if ($isError) {
       useErrorMessage('invalid fields', 400, res, {

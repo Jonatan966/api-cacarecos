@@ -1,12 +1,14 @@
-import * as yup from 'yup'
+import { AppObjectSchemaProps } from '@interfaces/Schema'
 
 type IsError = {
   $isError?: boolean;
 }
 
-export async function useObjectValidation <T = any> (data: any, schema: yup.ObjectSchema<any>): Promise<T & IsError> {
+type HookReturn<SCH> = Promise<SCH & IsError>
+
+export async function useObjectValidation<OBJ> (data: any, appSchema: AppObjectSchemaProps<OBJ>): HookReturn<typeof appSchema.Types> {
   try {
-    return await schema.validate(data, { abortEarly: false, stripUnknown: true })
+    return await appSchema.YupSchema.validate(data, { abortEarly: false, stripUnknown: true })
   } catch (error) {
     const errorMessages = {} as any
 

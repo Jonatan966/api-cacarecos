@@ -11,14 +11,14 @@ import { AppControllerProps, NewResponse } from '@interfaces//Controller'
 import { AutoBindClass } from '@interfaces/AutoBind'
 import { User } from '@models/User'
 
-import { UserSchemaProps, UserSchema } from '../schemas/UserSchema'
+import { UserObjectSchema } from '../schemas/UserSchema'
 
 class UserControllerClass extends AutoBindClass implements AppControllerProps {
   async create (req: Request, res: NewResponse) {
     const {
       $isError,
       ...body
-    } = await useObjectValidation<UserSchemaProps>(req.body, UserSchema)
+    } = await useObjectValidation(req.body, UserObjectSchema)
 
     if ($isError) {
       return useErrorMessage('invalid fields', 400, res, {

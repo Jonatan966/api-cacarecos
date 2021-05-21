@@ -9,11 +9,11 @@ import { Order, OrderStatus } from '@models/Order'
 import { OrderProduct } from '@models/OrderProduct'
 import { Product } from '@models/Product'
 
-import { OrderSchema, OrderSchemaProps } from '../schemas/OrderSchema'
+import { OrderObjectSchema } from '../schemas/OrderSchema'
 
 class OrderControllerClass extends AutoBindClass implements AppControllerProps {
   async create (req: Request, res: NewResponse) {
-    const { products, $isError } = await useObjectValidation<OrderSchemaProps>(req.body, OrderSchema)
+    const { products, $isError } = await useObjectValidation(req.body, OrderObjectSchema)
 
     if ($isError) {
       return useErrorMessage('invalid fields', 400, res, {

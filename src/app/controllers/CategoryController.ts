@@ -8,11 +8,11 @@ import { AutoBindClass } from '@interfaces/AutoBind'
 import { AppControllerProps, NewResponse } from '@interfaces/Controller'
 import { Category } from '@models/Category'
 
-import { CategorySchemaProps, CategorySchema } from '../schemas/CategorySchema'
+import { CategoryObjectSchema } from '../schemas/CategorySchema'
 
 class CategoryControllerClass extends AutoBindClass implements AppControllerProps {
   async create (req: Request, res: NewResponse) {
-    const { name, color, $isError } = await useObjectValidation<CategorySchemaProps>(req.body, CategorySchema)
+    const { name, color, $isError } = await useObjectValidation(req.body, CategoryObjectSchema)
 
     if ($isError) {
       return useErrorMessage('invalid fields', 400, res, {
