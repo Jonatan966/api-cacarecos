@@ -3,13 +3,22 @@ import { getRepository } from 'typeorm'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
+import { useObjectValidation } from '@hooks/useObjectValidation'
 import { AppControllerProps, NewResponse } from '@interfaces//Controller'
 import { AutoBindClass } from '@interfaces/AutoBind'
 import { Permission } from '@models/Permission'
 
+import { PermissionObjectSchema } from '../schemas/PermissionSchema'
+
 class PermissionControllerClass extends AutoBindClass implements AppControllerProps {
   async create (req: Request, res: NewResponse) {
-    const { name } = req.body
+    const { name, $isError } = await useObjectValidation(req.body, PermissionObjectSchema)
+
+    if ($isError) {
+      return useErrorMessage('invalid fields', 400, res, {
+        fields: { name }
+      })
+    }
 
     const insertedPermission = await useInsertOnlyNotExists({ name }, Permission, { name })
 
