@@ -67,15 +67,6 @@ export const productRoutesTests: RouteTest = (req) => {
         .expect(/"error":/)
     })
 
-    it('Should be able to delete product', async () => {
-      const reqResult = await req.get('/products')
-
-      const createdProduct = reqResult.body.results.find(product => product.name === 'New test')
-
-      await req.delete(`/products/${createdProduct.id}`)
-        .expect(200)
-    })
-
     it('Should be able to create a temporary product for next tests', async () => {
       const existentProducts = (await req.get('/products')).body.results
       const category = (await req.get('/categories')).body.results[0].id
@@ -89,12 +80,28 @@ export const productRoutesTests: RouteTest = (req) => {
           name: 'Routes test',
           description: 'The new route test',
           slug: 'new-route-test',
-          price: 250,
+          price: 255,
           units: 300,
           category
         })
         .expect(201)
         .expect(/"id":/)
+    })
+
+    it('Should be able to search product by price', async () => {
+      const searchResponse = await req.get('/products?price=255')
+        .expect(/"name":"Routes test"/)
+
+      expect(searchResponse.body.results).toHaveLength(1)
+    })
+
+    it('Should be able to delete product', async () => {
+      const reqResult = await req.get('/products')
+
+      const createdProduct = reqResult.body.results.find(product => product.name === 'New test')
+
+      await req.delete(`/products/${createdProduct.id}`)
+        .expect(200)
     })
   })
 }

@@ -85,7 +85,7 @@ class ProductControllerClass extends AutoBindClass {
     const productImageRepository = getRepository(ProductImage)
 
     const paginator = usePaginator(req.query)
-    const searchParams = useSearchParams(req.query, productRepository, ['id'], ['ratings', 'images'])
+    const searchParams = useSearchParams(req.query, productRepository, ['id', 'units', 'price'], ['ratings', 'images'])
 
     const products = await productRepository.find({
       ...paginator,
