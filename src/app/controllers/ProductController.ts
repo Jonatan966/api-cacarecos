@@ -5,6 +5,9 @@ import { getRepository } from 'typeorm'
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
 import { useObjectValidation } from '@hooks/useObjectValidation'
+import { usePaginator } from '@hooks/usePaginator'
+import { useResponseBuilder } from '@hooks/useResponseBuilder'
+import { useSearchParams } from '@hooks/useSearchParams'
 import { AutoBindClass } from '@interfaces/AutoBind'
 import { NewResponse } from '@interfaces/Controller'
 import { Category } from '@models/Category'
@@ -77,11 +80,17 @@ class ProductControllerClass extends AutoBindClass {
     }
   }
 
-  async index (_req: Request, res: NewResponse) {
+  async index (req: Request, res: NewResponse) {
     const productRepository = getRepository(Product)
     const productImageRepository = getRepository(ProductImage)
 
-    const products = await productRepository.find()
+    const paginator = usePaginator(req.query)
+    const searchParams = useSearchParams(req.query, productRepository, ['id'], ['ratings', 'images'])
+
+    const products = await productRepository.find({
+      ...paginator,
+      where: searchParams
+    })
     const productsImages = await productImageRepository.find({
       where: products.map(product => ({ product, primary: true }))
     })
@@ -93,9 +102,16 @@ class ProductControllerClass extends AutoBindClass {
       )
     }))
 
+    const buildedResponse = await useResponseBuilder(
+      productsWithImage,
+      paginator,
+      searchParams,
+      productRepository as any
+    )
+
     return res
       .status(200)
-      .json(productsWithImage as any)
+      .json(buildedResponse)
   }
 
   async show (req: Request, res: NewResponse) {

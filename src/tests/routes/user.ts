@@ -24,7 +24,7 @@ export const userRoutesTests: RouteTest = (req) => {
     })
 
     it('Should be able to view one user and their relationships', async () => {
-      const userId = (await req.get('/users')).body[0].id
+      const userId = (await req.get('/users')).body.results[0].id
 
       await req.get(`/users/${userId}`)
         .expect(/"id":/)
@@ -33,7 +33,7 @@ export const userRoutesTests: RouteTest = (req) => {
     })
 
     it('Should not be able to return users passwords', async () => {
-      const user = (await req.get('/users')).body[0]
+      const user = (await req.get('/users')).body.results[0]
 
       expect(user.password).toBeUndefined()
     })
@@ -52,14 +52,14 @@ export const userRoutesTests: RouteTest = (req) => {
     it('Should be able to delete user', async () => {
       const reqResult = await req.get('/users')
 
-      const createdUser = reqResult.body.find(user => user.name === 'TEMP_ROUTE_TEST')
+      const createdUser = reqResult.body.results.find(user => user.name === 'TEMP_ROUTE_TEST')
 
       await req.delete(`/users/${createdUser.id}`)
         .expect(200)
     })
 
     it('Should be able to create a temporary user for next tests', async () => {
-      const existentUsers = (await req.get('/users')).body
+      const existentUsers = (await req.get('/users')).body.results
 
       if (existentUsers.find(user => user.name === 'ROUTES_TEST')) {
         return expect(1).toEqual(1)

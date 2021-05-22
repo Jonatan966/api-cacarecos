@@ -30,14 +30,14 @@ export const categoryRoutesTests = (req: request.SuperTest<request.Test>) => {
     it('Should be able to delete category', async () => {
       const reqResult = await req.get('/categories')
 
-      const createdCategory = reqResult.body.find(category => category.name === 'NEW_TEST')
+      const createdCategory = reqResult.body.results.find(category => category.name === 'NEW_TEST')
 
       await req.delete(`/categories/${createdCategory.id}`)
         .expect(200)
     })
 
     it('Should be able to create a temporary category for next tests', async () => {
-      const existentCategories = (await req.get('/categories')).body
+      const existentCategories = (await req.get('/categories')).body.results
 
       if (existentCategories.find(category => category.name === 'ROUTES_TEST')) {
         return expect(1).toEqual(1)

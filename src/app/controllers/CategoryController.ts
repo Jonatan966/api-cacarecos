@@ -4,6 +4,9 @@ import { getRepository } from 'typeorm'
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
 import { useObjectValidation } from '@hooks/useObjectValidation'
+import { usePaginator } from '@hooks/usePaginator'
+import { useResponseBuilder } from '@hooks/useResponseBuilder'
+import { useSearchParams } from '@hooks/useSearchParams'
 import { AutoBindClass } from '@interfaces/AutoBind'
 import { AppControllerProps, NewResponse } from '@interfaces/Controller'
 import { Category } from '@models/Category'
@@ -46,12 +49,25 @@ class CategoryControllerClass extends AutoBindClass implements AppControllerProp
     return useErrorMessage('category does not exists', 400, res)
   }
 
-  async index (_req: Request, res: NewResponse) {
+  async index (req: Request, res: NewResponse) {
     const categoryRepository = getRepository(Category)
 
-    const categories = await categoryRepository.find()
+    const paginator = usePaginator(req.query)
+    const searchParams = useSearchParams(req.query, categoryRepository, ['id'])
 
-    return res.json(categories)
+    const categories = await categoryRepository.find({
+      ...paginator,
+      where: searchParams
+    })
+
+    const buildedResponse = await useResponseBuilder(
+      categories,
+      paginator,
+      searchParams,
+      categoryRepository
+    )
+
+    return res.json(buildedResponse)
   }
 
   async show (req: Request, res: NewResponse) {

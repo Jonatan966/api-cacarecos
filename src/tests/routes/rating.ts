@@ -17,7 +17,7 @@ export const ratingRoutesTests: RouteTest = (req) => {
     })
 
     it('Should be able to insert a rating', async () => {
-      const productID = (await req.get('/products')).body[0].id
+      const productID = (await req.get('/products')).body.results[0].id
 
       await req.post(`/products/${productID}/ratings`)
         .set('Cookie', 'token=' + token)
@@ -30,14 +30,14 @@ export const ratingRoutesTests: RouteTest = (req) => {
     })
 
     it('Should be able to find created rating', async () => {
-      const productID = (await req.get('/products')).body[0].id
+      const productID = (await req.get('/products')).body.results[0].id
 
       await req.get(`/products/${productID}/ratings`)
         .expect(/"content":"New test"/)
     })
 
     it('Should not be able to create a rating in the same product', async () => {
-      const productID = (await req.get('/products')).body[0].id
+      const productID = (await req.get('/products')).body.results[0].id
 
       await req.post(`/products/${productID}/ratings`)
         .set('Cookie', 'token=' + token)
@@ -50,7 +50,7 @@ export const ratingRoutesTests: RouteTest = (req) => {
     })
 
     it('Should not be able to create a rating without stars', async () => {
-      const productID = (await req.get('/products')).body[0].id
+      const productID = (await req.get('/products')).body.results[0].id
 
       await req.post(`/products/${productID}/ratings`)
         .set('Cookie', 'token=' + token)
@@ -62,9 +62,9 @@ export const ratingRoutesTests: RouteTest = (req) => {
     })
 
     it('Should be able to delete rating', async () => {
-      const product = (await req.get('/products')).body[0]
+      const product = (await req.get('/products')).body.results[0]
 
-      const productRatings = (await req.get(`/products/${product.id}/ratings`)).body
+      const productRatings = (await req.get(`/products/${product.id}/ratings`)).body.results
 
       const ratingID = productRatings.find(rating => rating.content === 'New test')?.id
 
@@ -74,9 +74,9 @@ export const ratingRoutesTests: RouteTest = (req) => {
     })
 
     it('Should be able to create a temporary rating for next tests', async () => {
-      const product = (await req.get('/products')).body[0]
+      const product = (await req.get('/products')).body.results[0]
 
-      const productRatings = (await req.get(`/products/${product.id}/ratings`)).body
+      const productRatings = (await req.get(`/products/${product.id}/ratings`)).body.results
 
       if (productRatings.find(rating => rating.content === 'ROUTES_TEST')) {
         return expect(1).toEqual(1)

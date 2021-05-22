@@ -28,14 +28,14 @@ export const permissionRoutesTests = (req: request.SuperTest<request.Test>) => {
     it('Should be able to delete permission', async () => {
       const reqResult = await req.get('/permissions')
 
-      const createdPermission = reqResult.body.find(permission => permission.name === 'NEW_TEST')
+      const createdPermission = reqResult.body.results.find(permission => permission.name === 'NEW_TEST')
 
       await req.delete(`/permissions/${createdPermission.id}`)
         .expect(200)
     })
 
     it('Should be able to create a temporary permission for next tests', async () => {
-      const existentPermissions = (await req.get('/permissions')).body
+      const existentPermissions = (await req.get('/permissions')).body.results
 
       if (existentPermissions.find(permission => permission.name === 'ROUTES_TEST')) {
         return expect(1).toEqual(1)

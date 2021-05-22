@@ -3,7 +3,7 @@ import request from 'supertest'
 export const roleRoutesTests = (req: request.SuperTest<request.Test>) => {
   describe('Role routes tests', () => {
     it('Should be able to insert a role', async () => {
-      const permissions = (await req.get('/permissions')).body
+      const permissions = (await req.get('/permissions')).body.results
 
       await req.post('/roles')
         .send({
@@ -40,10 +40,10 @@ export const roleRoutesTests = (req: request.SuperTest<request.Test>) => {
     })
 
     it('Should be able to update role permissions', async () => {
-      const roles = (await req.get('/roles')).body
+      const roles = (await req.get('/roles')).body.results
       const targetRole = roles.find(role => role.name === 'BOSS')
 
-      let permissions = (await req.get('/permissions')).body
+      let permissions = (await req.get('/permissions')).body.results
 
       permissions = permissions.map(permission => permission.id)
 
@@ -56,18 +56,18 @@ export const roleRoutesTests = (req: request.SuperTest<request.Test>) => {
     it('Should be able to delete role', async () => {
       const reqResult = await req.get('/roles')
 
-      const createdRole = reqResult.body.find(role => role.name === 'BOSS')
+      const createdRole = reqResult.body.results.find(role => role.name === 'BOSS')
 
       await req.delete(`/roles/${createdRole.id}`)
         .expect(200)
     })
 
     it('Should be able to create a temporary role for next tests', async () => {
-      let permissions = (await req.get('/permissions')).body
+      let permissions = (await req.get('/permissions')).body.results
 
       permissions = permissions.map(permission => permission.id)
 
-      const existentRoles = (await req.get('/roles')).body
+      const existentRoles = (await req.get('/roles')).body.results
 
       if (existentRoles.find(role => role.name === 'ROUTES_TEST')) {
         return expect(1).toEqual(1)
