@@ -7,6 +7,9 @@ import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useHashString } from '@hooks/useHashString'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
 import { useObjectValidation } from '@hooks/useObjectValidation'
+import { usePaginator } from '@hooks/usePaginator'
+import { useResponseBuilder } from '@hooks/useResponseBuilder'
+import { useSearchParams } from '@hooks/useSearchParams'
 import { AppControllerProps, NewResponse } from '@interfaces//Controller'
 import { AutoBindClass } from '@interfaces/AutoBind'
 import { User } from '@models/User'
@@ -59,12 +62,26 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
     return useErrorMessage('user does not exists', 400, res)
   }
 
-  async index (_req: Request, res: NewResponse) {
+  async index (req: Request, res: NewResponse) {
     const userRepository = getRepository(User)
+
+    const paginator = usePaginator(req.query)
+    const searchParams = useSearchParams(req.query,
+      userRepository,
+      ['id'],
+      ['password', 'loginId', 'orders']
+    )
 
     const users = await userRepository.find({ relations: ['roles'] })
 
-    return res.json(users)
+    const buildedResponse = await useResponseBuilder(
+      users,
+      paginator,
+      searchParams,
+      userRepository
+    )
+
+    return res.json(buildedResponse)
   }
 
   async show (req: Request, res: NewResponse) {

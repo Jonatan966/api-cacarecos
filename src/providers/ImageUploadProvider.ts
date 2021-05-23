@@ -4,6 +4,8 @@ import { v4 as generateUUID } from 'uuid'
 
 import { wait } from '@utils/wait'
 
+import { unlink } from 'fs/promises'
+
 const WORKFOLDER = 'cacarecos'
 
 export interface ImageItem {
@@ -23,6 +25,8 @@ export const ImageUploadProvider = {
       const uploadResponse = await cloudinary.uploader.upload(imagePath, {
         public_id: finalImagePath
       })
+
+      await unlink(imagePath)
 
       return {
         url: uploadResponse.secure_url,

@@ -4,6 +4,9 @@ import { getRepository } from 'typeorm'
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
 import { useObjectValidation } from '@hooks/useObjectValidation'
+import { usePaginator } from '@hooks/usePaginator'
+import { useResponseBuilder } from '@hooks/useResponseBuilder'
+import { useSearchParams } from '@hooks/useSearchParams'
 import { AutoBindClass } from '@interfaces/AutoBind'
 import { AppControllerProps, NewResponse } from '@interfaces/Controller'
 import { Permission } from '@models/Permission'
@@ -40,14 +43,31 @@ class RoleControllerClass extends AutoBindClass implements AppControllerProps {
       .json(insertResult)
   }
 
-  async index (_req: Request, res: NewResponse) {
+  async index (req: Request, res: NewResponse) {
     const roleRepository = getRepository(Role)
 
+    const paginator = usePaginator(req.query)
+    const searchParams = useSearchParams(
+      req.query,
+      roleRepository,
+      ['id'],
+      ['permissions']
+    )
+
     const roles = await roleRepository.find({
-      relations: ['permissions']
+      ...paginator,
+      relations: ['permissions'],
+      where: searchParams
     })
 
-    return res.json(roles)
+    const buildedResponse = await useResponseBuilder(
+      roles,
+      paginator,
+      searchParams,
+      roleRepository
+    )
+
+    return res.json(buildedResponse)
   }
 
   async remove (req: Request, res: NewResponse) {

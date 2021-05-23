@@ -3,6 +3,9 @@ import { getRepository } from 'typeorm'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useObjectValidation } from '@hooks/useObjectValidation'
+import { usePaginator } from '@hooks/usePaginator'
+import { useResponseBuilder } from '@hooks/useResponseBuilder'
+import { useSearchParams } from '@hooks/useSearchParams'
 import { AppControllerProps, NewResponse } from '@interfaces//Controller'
 import { AutoBindClass } from '@interfaces/AutoBind'
 import { Order, OrderStatus } from '@models/Order'
@@ -80,14 +83,31 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
     } as any)
   }
 
-  async index (_req: Request, res: NewResponse) {
+  async index (req: Request, res: NewResponse) {
     const orderRepo = getRepository(Order)
 
+    const paginator = usePaginator(req.query)
+    const searchParams = useSearchParams(
+      req.query,
+      orderRepo,
+      ['id', 'status', 'amount', 'finishedBy', 'owner'],
+      ['orderProducts']
+    )
+
     const orders = await orderRepo.find({
-      relations: ['owner']
+      relations: ['owner'],
+      ...paginator,
+      where: searchParams
     })
 
-    return res.status(200).send(orders)
+    const buildedResponse = await useResponseBuilder(
+      orders,
+      paginator,
+      searchParams,
+      orderRepo
+    )
+
+    return res.json(buildedResponse)
   }
 
   async remove (req: Request, res: NewResponse) {

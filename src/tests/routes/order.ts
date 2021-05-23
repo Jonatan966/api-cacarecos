@@ -18,7 +18,7 @@ export const orderRoutesTests: RouteTest = (req) => {
     })
 
     it('Should be able to insert a order', async () => {
-      const product = (await req.get('/products')).body[0]
+      const product = (await req.get('/products')).body.results[0]
 
       const testResponse = await req
         .post('/orders')
@@ -40,7 +40,7 @@ export const orderRoutesTests: RouteTest = (req) => {
         .get('/orders')
         .set('Cookie', `token=${token}`)
         .expect(orderRes =>
-          orderRes.body.find(order =>
+          orderRes.body.results.find(order =>
             order.id === createdOrderId
           )
         )

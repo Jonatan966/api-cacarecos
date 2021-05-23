@@ -5,7 +5,7 @@ import { RouteTest } from '@interfaces/RouteTest'
 export const productRoutesTests: RouteTest = (req) => {
   describe('Product route tests', () => {
     it('Should be able to insert a product', async () => {
-      const category = (await req.get('/categories')).body[0].id
+      const category = (await req.get('/categories')).body.results[0].id
 
       await req.post('/products')
         .attach('product_images', path.join(__dirname, '..', 'files', 'test.png'))
@@ -32,7 +32,7 @@ export const productRoutesTests: RouteTest = (req) => {
     })
 
     it('Should be able to view product by id', async () => {
-      const productId = (await req.get('/products')).body[0].id
+      const productId = (await req.get('/products')).body.results[0].id
 
       await req.get(`/products/${productId}`)
         .expect(200)
@@ -40,7 +40,7 @@ export const productRoutesTests: RouteTest = (req) => {
     })
 
     it('Should be able to update product', async () => {
-      const product = (await req.get('/products')).body
+      const product = (await req.get('/products')).body.results
         .find(item => item.name === 'New test')
 
       await req
@@ -52,7 +52,7 @@ export const productRoutesTests: RouteTest = (req) => {
     })
 
     it('Should not be able to create a product with the same name', async () => {
-      const category = (await req.get('/categories')).body[0].id
+      const category = (await req.get('/categories')).body.results[0].id
 
       await req.post('/products')
         .send({
@@ -67,18 +67,9 @@ export const productRoutesTests: RouteTest = (req) => {
         .expect(/"error":/)
     })
 
-    it('Should be able to delete product', async () => {
-      const reqResult = await req.get('/products')
-
-      const createdProduct = reqResult.body.find(product => product.name === 'New test')
-
-      await req.delete(`/products/${createdProduct.id}`)
-        .expect(200)
-    })
-
     it('Should be able to create a temporary product for next tests', async () => {
-      const existentProducts = (await req.get('/products')).body
-      const category = (await req.get('/categories')).body[0].id
+      const existentProducts = (await req.get('/products')).body.results
+      const category = (await req.get('/categories')).body.results[0].id
 
       if (existentProducts.find(product => product.slug === 'new-route-test')) {
         return expect(1).toEqual(1)
@@ -89,12 +80,28 @@ export const productRoutesTests: RouteTest = (req) => {
           name: 'Routes test',
           description: 'The new route test',
           slug: 'new-route-test',
-          price: 250,
+          price: 255,
           units: 300,
           category
         })
         .expect(201)
         .expect(/"id":/)
+    })
+
+    it('Should be able to search product by price', async () => {
+      const searchResponse = await req.get('/products?price=255')
+        .expect(/"name":"Routes test"/)
+
+      expect(searchResponse.body.results).toHaveLength(1)
+    })
+
+    it('Should be able to delete product', async () => {
+      const reqResult = await req.get('/products')
+
+      const createdProduct = reqResult.body.results.find(product => product.name === 'New test')
+
+      await req.delete(`/products/${createdProduct.id}`)
+        .expect(200)
     })
   })
 }
