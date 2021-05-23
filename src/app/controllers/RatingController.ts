@@ -69,7 +69,11 @@ class RatingControllerClass extends AutoBindClass implements AppControllerProps 
     const ratingRepository = getRepository(Rating)
 
     const paginator = usePaginator(req.query)
-    const searchParams = useSearchParams(req.query, ratingRepository, ['id', 'author', 'product', 'stars'])
+    const searchParams = useSearchParams(
+      req.query,
+      ratingRepository,
+      ['id', 'author', 'product', 'stars']
+    )
 
     const ratings = await ratingRepository.find({
       ...paginator,

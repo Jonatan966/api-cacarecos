@@ -66,7 +66,11 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
     const userRepository = getRepository(User)
 
     const paginator = usePaginator(req.query)
-    const searchParams = useSearchParams(req.query, userRepository, ['id'], ['password', 'loginId', 'orders'])
+    const searchParams = useSearchParams(req.query,
+      userRepository,
+      ['id'],
+      ['password', 'loginId', 'orders']
+    )
 
     const users = await userRepository.find({ relations: ['roles'] })
 

@@ -47,7 +47,12 @@ class RoleControllerClass extends AutoBindClass implements AppControllerProps {
     const roleRepository = getRepository(Role)
 
     const paginator = usePaginator(req.query)
-    const searchParams = useSearchParams(req.query, roleRepository, ['id'], ['permissions'])
+    const searchParams = useSearchParams(
+      req.query,
+      roleRepository,
+      ['id'],
+      ['permissions']
+    )
 
     const roles = await roleRepository.find({
       ...paginator,

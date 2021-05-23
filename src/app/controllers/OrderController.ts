@@ -87,7 +87,12 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
     const orderRepo = getRepository(Order)
 
     const paginator = usePaginator(req.query)
-    const searchParams = useSearchParams(req.query, orderRepo, ['id', 'status', 'amount'], ['orderProducts'])
+    const searchParams = useSearchParams(
+      req.query,
+      orderRepo,
+      ['id', 'status', 'amount', 'finishedBy', 'owner'],
+      ['orderProducts']
+    )
 
     const orders = await orderRepo.find({
       relations: ['owner'],
