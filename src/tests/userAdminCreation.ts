@@ -26,13 +26,13 @@ export const userAdminCreation = () => {
         ,('REMOVE_CATEGORY'),('REMOVE_PRODUCT'),('REMOVE_USER')
        ,('EDIT_USER'),('ADD_PERMISSION'),('LIST_PERMISSIONS')
        ,('REMOVE_PERMISSION'),('ADD_ROLE'),('EDIT_ROLE')
-       ,('REMOVE_ROLE'),('VIEW_ROLES')
+       ,('REMOVE_ROLE'),('VIEW_ROLES'),('UPDATE_ORDER')
       `)
 
       const createdPermissions = await getManager().query('SELECT COUNT(*) FROM permissions')
 
       expect(createdPermissions).toHaveLength(1)
-      expect(createdPermissions[0]).toHaveProperty('count', '22')
+      expect(createdPermissions[0]).toHaveProperty('count', '23')
     })
 
     it('Should be able to create roles', async () => {

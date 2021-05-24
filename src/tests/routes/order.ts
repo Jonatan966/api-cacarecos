@@ -46,6 +46,22 @@ export const orderRoutesTests: RouteTest = (req) => {
         )
     })
 
+    it('Should be able to change order status', async () => {
+      await req
+        .patch(`/orders/${createdOrderId}/status`)
+        .set('Cookie', `token=${token}`)
+        .send({ status: 'PREPARING_DELIVERY' })
+        .expect(200)
+    })
+
+    it('Should not be able to change wrong order status', async () => {
+      await req
+        .patch(`/orders/${createdOrderId}/status`)
+        .set('Cookie', `token=${token}`)
+        .send({ status: 'BLA' })
+        .expect(400)
+    })
+
     it('Should be able to cancel order', async () => {
       await req
         .delete(`/orders/${createdOrderId}`)

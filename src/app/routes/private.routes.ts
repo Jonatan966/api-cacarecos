@@ -60,14 +60,12 @@ const routes: RouteList = {
   '/products/:productId/ratings': {
     post: [
       checkProductMiddleware,
-      AuthController.validate,
       RatingController.create
     ]
   },
   '/products/:productId/ratings/:ratingId': {
     delete: [
       checkProductMiddleware,
-      AuthController.validate,
       RatingController.remove
     ]
   },
@@ -83,10 +81,10 @@ const routes: RouteList = {
     get: OrderController.index
   },
   '/orders/:id': {
-    delete: [
-      AuthController.validate,
-      OrderController.remove
-    ]
+    delete: OrderController.remove
+  },
+  '/orders/:id/status': {
+    patch: OrderController.changeStatus
   }
 }
 

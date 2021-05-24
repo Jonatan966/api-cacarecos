@@ -14,6 +14,7 @@ import { Product } from '@models/Product'
 
 import { DefinePermissions, findPermission } from '../decorators/DefinePermissions'
 import { OrderObjectSchema } from '../schemas/OrderSchema'
+import { StatusObjectSchema } from '../schemas/StatusSchema'
 
 class OrderControllerClass extends AutoBindClass implements AppControllerProps {
   @DefinePermissions('BUY')
@@ -118,28 +119,61 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
     return res.json(buildedResponse)
   }
 
+  @DefinePermissions('BUY')
   async remove (req: Request, res: NewResponse) {
     const { id: orderId } = req.params
 
     const orderRepo = getRepository(Order)
 
     const order = await orderRepo.findOne(orderId, {
-      relations: ['owner']
+      relations: ['owner'],
+      where: findPermission(res.locals.user.roles, 'CANCEL_ORDER') ? null : {
+        owner: res.locals.user
+      }
     })
 
-    if (!res.locals.user.roles.some(role => role.name === 'ADMIN')) {
-      if (!order || order.owner.id !== res.locals.user.id) {
-        return useErrorMessage('order not exists', 400, res)
-      }
+    if (!order) {
+      return useErrorMessage('order not exists', 400, res)
     }
 
     if (order.status === OrderStatus.Finished) {
       return useErrorMessage('it is not possible to cancel an order that has already been finished', 400, res)
     }
 
-    order.status = OrderStatus.Canceled
+    await orderRepo.update(order.id, { status: OrderStatus.Canceled })
 
-    await orderRepo.update(order.id, { status: order.status })
+    return res.sendStatus(200)
+  }
+
+  @DefinePermissions('UPDATE_ORDER')
+  async changeStatus (req: Request, res: NewResponse) {
+    const { id: orderId } = req.params
+    const { status, $isError } = await useObjectValidation(req.body, StatusObjectSchema)
+
+    if ($isError) {
+      return useErrorMessage('invalid fields', 400, res, {
+        fields: { status }
+      })
+    }
+
+    const orderRepo = getRepository(Order)
+
+    const order = await orderRepo.findOne(orderId)
+
+    if (!order) {
+      return useErrorMessage('order not exists', 400, res)
+    }
+
+    const updateResult = await orderRepo.update(order.id, {
+      status: OrderStatus[status],
+      finishedBy: OrderStatus[status] === OrderStatus.Finished
+        ? res.locals.user
+        : order.finishedBy
+    })
+
+    if (!updateResult.affected) {
+      return useErrorMessage('it was not possible to change the status of this order', 500, res)
+    }
 
     return res.sendStatus(200)
   }
