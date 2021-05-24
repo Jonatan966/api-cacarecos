@@ -12,7 +12,7 @@ import { Order, OrderStatus } from '@models/Order'
 import { OrderProduct } from '@models/OrderProduct'
 import { Product } from '@models/Product'
 
-import { DefinePermissions } from '../decorators/DefinePermissions'
+import { DefinePermissions, findPermission } from '../decorators/DefinePermissions'
 import { OrderObjectSchema } from '../schemas/OrderSchema'
 
 class OrderControllerClass extends AutoBindClass implements AppControllerProps {
@@ -85,13 +85,18 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
     } as any)
   }
 
-  @DefinePermissions('VIEW_ORDERS')
+  @DefinePermissions('BUY')
   async index (req: Request, res: NewResponse) {
     const orderRepo = getRepository(Order)
 
     const paginator = usePaginator(req.query)
     const searchParams = useSearchParams(
-      req.query,
+      {
+        owner: findPermission(res.locals.user.roles, 'VIEW_ORDERS')
+          ? req.query?.owner
+          : res.locals.user as any,
+        ...req.query
+      },
       orderRepo,
       ['id', 'status', 'amount', 'finishedBy', 'owner'],
       ['orderProducts']
