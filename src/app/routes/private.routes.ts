@@ -16,6 +16,10 @@ import { multerService } from '../services/multer'
 
 const privateRoutes = Router()
 
+privateRoutes.use(
+  AuthController.validate
+)
+
 const routes: RouteList = {
   '/permissions': {
     post: PermissionController.create,
@@ -75,14 +79,8 @@ const routes: RouteList = {
     delete: UserController.remove
   },
   '/orders': {
-    post: [
-      AuthController.validate,
-      OrderController.create
-    ],
-    get: [
-      AuthController.validate,
-      OrderController.index
-    ]
+    post: OrderController.create,
+    get: OrderController.index
   },
   '/orders/:id': {
     delete: [

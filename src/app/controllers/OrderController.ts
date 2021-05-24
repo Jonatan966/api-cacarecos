@@ -12,9 +12,11 @@ import { Order, OrderStatus } from '@models/Order'
 import { OrderProduct } from '@models/OrderProduct'
 import { Product } from '@models/Product'
 
+import { DefinePermissions } from '../decorators/DefinePermissions'
 import { OrderObjectSchema } from '../schemas/OrderSchema'
 
 class OrderControllerClass extends AutoBindClass implements AppControllerProps {
+  @DefinePermissions('BUY')
   async create (req: Request, res: NewResponse) {
     const { products, $isError } = await useObjectValidation(req.body, OrderObjectSchema)
 
@@ -83,6 +85,7 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
     } as any)
   }
 
+  @DefinePermissions('VIEW_ORDERS')
   async index (req: Request, res: NewResponse) {
     const orderRepo = getRepository(Order)
 

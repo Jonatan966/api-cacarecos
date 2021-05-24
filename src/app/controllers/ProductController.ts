@@ -17,9 +17,11 @@ import { ImageUploadProvider } from '@providers/ImageUploadProvider'
 import { makeSchemaFieldsOptional } from '@utils/makeSchemaFieldsOptional'
 import { slugCreator } from '@utils/slugCreator'
 
+import { DefinePermissions } from '../decorators/DefinePermissions'
 import { ProductObjectSchema } from '../schemas/ProductSchema'
 
 class ProductControllerClass extends AutoBindClass {
+  @DefinePermissions('ADD_PRODUCT')
   async create (req: Request, res: NewResponse) {
     const {
       $isError,
@@ -54,7 +56,7 @@ class ProductControllerClass extends AutoBindClass {
     }
 
     const uploadResult = await this._uploadProductImages(
-      req.files as any ?? [],
+      (req.files as any) ?? [],
       insertedProduct,
       main_image.identifier
     )
@@ -67,6 +69,7 @@ class ProductControllerClass extends AutoBindClass {
       })
   }
 
+  @DefinePermissions('REMOVE_PRODUCT')
   async remove (_req: Request, res: NewResponse) {
     const productRepository = getRepository(Product)
 
@@ -135,6 +138,7 @@ class ProductControllerClass extends AutoBindClass {
     return useErrorMessage('product does not exists', 400, res)
   }
 
+  @DefinePermissions('EDIT_PRODUCT')
   async update (req: Request, res: NewResponse) {
     const { id: productId } = req.params
     const {

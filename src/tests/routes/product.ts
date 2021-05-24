@@ -4,10 +4,25 @@ import { RouteTest } from '@interfaces/RouteTest'
 
 export const productRoutesTests: RouteTest = (req) => {
   describe('Product route tests', () => {
+    let token = ''
+
+    it('Should be able to log in and get token', async () => {
+      const response = await req.post('/auth/login')
+        .send({
+          email: 'admin@admin.com',
+          password: 'admin'
+        })
+        .expect(200)
+        .expect(/"token":/)
+
+      token = response.body.token
+    })
+
     it('Should be able to insert a product', async () => {
       const category = (await req.get('/categories')).body.results[0].id
 
       await req.post('/products')
+        .set('Cookie', `token=${token}`)
         .attach('product_images', path.join(__dirname, '..', 'files', 'test.png'))
         .field({
           name: 'New test',
@@ -45,6 +60,7 @@ export const productRoutesTests: RouteTest = (req) => {
 
       await req
         .put(`/products/${product.id}`)
+        .set('Cookie', `token=${token}`)
         .send({
           other_details: 'Um detalhe'
         })
@@ -55,6 +71,7 @@ export const productRoutesTests: RouteTest = (req) => {
       const category = (await req.get('/categories')).body.results[0].id
 
       await req.post('/products')
+        .set('Cookie', `token=${token}`)
         .send({
           name: 'New test',
           description: 'The new test',
@@ -76,6 +93,7 @@ export const productRoutesTests: RouteTest = (req) => {
       }
 
       await req.post('/products')
+        .set('Cookie', `token=${token}`)
         .send({
           name: 'Routes test',
           description: 'The new route test',
@@ -101,6 +119,7 @@ export const productRoutesTests: RouteTest = (req) => {
       const createdProduct = reqResult.body.results.find(product => product.name === 'New test')
 
       await req.delete(`/products/${createdProduct.id}`)
+        .set('Cookie', `token=${token}`)
         .expect(200)
     })
   })

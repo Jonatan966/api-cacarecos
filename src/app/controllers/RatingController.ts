@@ -12,9 +12,11 @@ import { AppControllerProps, NewResponse } from '@interfaces//Controller'
 import { AutoBindClass } from '@interfaces/AutoBind'
 import { Rating } from '@models/Rating'
 
+import { DefinePermissions } from '../decorators/DefinePermissions'
 import { RatingObjectSchema } from '../schemas/RatingSchema'
 
 class RatingControllerClass extends AutoBindClass implements AppControllerProps {
+  @DefinePermissions('ADD_RATING')
   async create (req: Request, res: NewResponse) {
     const { $isError, ...body } = await useObjectValidation(req.body, RatingObjectSchema)
 
@@ -46,6 +48,7 @@ class RatingControllerClass extends AutoBindClass implements AppControllerProps 
       .json(insertedRating)
   }
 
+  @DefinePermissions('REMOVE_RATING')
   async remove (req: Request, res: NewResponse) {
     const { ratingId } = req.params
 

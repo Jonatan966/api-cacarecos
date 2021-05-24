@@ -8,8 +8,8 @@ export const orderRoutesTests: RouteTest = (req) => {
     it('Should be able to log in and get token', async () => {
       const response = await req.post('/auth/login')
         .send({
-          email: 'routes-test@email.com',
-          password: 'the-password'
+          email: 'admin@admin.com',
+          password: 'admin'
         })
         .expect(200)
         .expect(/"token":/)

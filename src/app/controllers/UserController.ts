@@ -14,6 +14,7 @@ import { AppControllerProps, NewResponse } from '@interfaces//Controller'
 import { AutoBindClass } from '@interfaces/AutoBind'
 import { User } from '@models/User'
 
+import { DefinePermissions } from '../decorators/DefinePermissions'
 import { UserObjectSchema } from '../schemas/UserSchema'
 
 class UserControllerClass extends AutoBindClass implements AppControllerProps {
@@ -47,6 +48,7 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
       .json(insertedUser)
   }
 
+  @DefinePermissions('REMOVE_USER')
   async remove (req: Request, res: NewResponse) {
     const { id } = req.params
 
@@ -62,6 +64,7 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
     return useErrorMessage('user does not exists', 400, res)
   }
 
+  @DefinePermissions('LIST_USERS')
   async index (req: Request, res: NewResponse) {
     const userRepository = getRepository(User)
 
@@ -84,6 +87,7 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
     return res.json(buildedResponse)
   }
 
+  @DefinePermissions('SHOW_USER')
   async show (req: Request, res: NewResponse) {
     const { id } = req.params
 

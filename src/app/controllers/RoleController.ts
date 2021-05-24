@@ -12,9 +12,11 @@ import { AppControllerProps, NewResponse } from '@interfaces/Controller'
 import { Permission } from '@models/Permission'
 import { Role } from '@models/Role'
 
+import { DefinePermissions } from '../decorators/DefinePermissions'
 import { RoleObjectSchema } from '../schemas/RoleSchema'
 
 class RoleControllerClass extends AutoBindClass implements AppControllerProps {
+  @DefinePermissions('ADD_ROLE')
   async create (req: Request, res: NewResponse) {
     const { name, permissions, $isError } = await useObjectValidation(req.body, RoleObjectSchema)
     const permissionRepo = getRepository(Permission)
@@ -43,6 +45,7 @@ class RoleControllerClass extends AutoBindClass implements AppControllerProps {
       .json(insertResult)
   }
 
+  @DefinePermissions('VIEW_ROLES')
   async index (req: Request, res: NewResponse) {
     const roleRepository = getRepository(Role)
 
@@ -70,6 +73,7 @@ class RoleControllerClass extends AutoBindClass implements AppControllerProps {
     return res.json(buildedResponse)
   }
 
+  @DefinePermissions('REMOVE_ROLE')
   async remove (req: Request, res: NewResponse) {
     const { id } = req.params
 
@@ -85,6 +89,7 @@ class RoleControllerClass extends AutoBindClass implements AppControllerProps {
     return useErrorMessage('role does not exists', 400, res)
   }
 
+  @DefinePermissions('EDIT_ROLE')
   async updateRolePermissions (req: Request, res: NewResponse) {
     const roleRepository = getRepository(Role)
     const permissionRepository = getRepository(Permission)

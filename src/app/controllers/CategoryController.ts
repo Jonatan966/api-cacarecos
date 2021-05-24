@@ -11,9 +11,11 @@ import { AutoBindClass } from '@interfaces/AutoBind'
 import { AppControllerProps, NewResponse } from '@interfaces/Controller'
 import { Category } from '@models/Category'
 
+import { DefinePermissions } from '../decorators/DefinePermissions'
 import { CategoryObjectSchema } from '../schemas/CategorySchema'
 
 class CategoryControllerClass extends AutoBindClass implements AppControllerProps {
+  @DefinePermissions('ADD_CATEGORY')
   async create (req: Request, res: NewResponse) {
     const { name, color, $isError } = await useObjectValidation(req.body, CategoryObjectSchema)
 
@@ -34,6 +36,7 @@ class CategoryControllerClass extends AutoBindClass implements AppControllerProp
       .json(insertedCategory)
   }
 
+  @DefinePermissions('REMOVE_CATEGORY')
   async remove (req: Request, res: NewResponse) {
     const { id } = req.params
 
