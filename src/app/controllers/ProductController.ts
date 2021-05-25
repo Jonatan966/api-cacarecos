@@ -1,6 +1,7 @@
 
 import { Request } from 'express'
 import { getRepository } from 'typeorm'
+import { validate as validateUUID } from 'uuid'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
@@ -144,6 +145,7 @@ class ProductControllerClass extends AutoBindClass {
     const {
       $isError,
       main_image,
+      old_images,
       ...body
     } = await useObjectValidation(req.body, {
       ...ProductObjectSchema,
@@ -155,8 +157,6 @@ class ProductControllerClass extends AutoBindClass {
         fields: body
       })
     }
-
-    console.log(main_image)
 
     const categoryRepository = getRepository(Category)
     const productRepository = getRepository(Product)
@@ -177,6 +177,18 @@ class ProductControllerClass extends AutoBindClass {
       return useErrorMessage('there is no category with this id', 400, res)
     }
 
+    await this.removeProductImages(old_images, product)
+
+    if (main_image.type === 'storaged') {
+      await this.replaceMainImage(main_image.identifier, product)
+    }
+
+    const uploadResult = await this._uploadProductImages(
+      (req.files as any) ?? [],
+      product,
+      main_image.type === 'new' ? main_image.identifier : ''
+    )
+
     const updatedProductResult = await productRepository.save({
       ...product,
       ...body,
@@ -185,7 +197,10 @@ class ProductControllerClass extends AutoBindClass {
 
     return res
       .status(200)
-      .json(updatedProductResult)
+      .json({
+        ...updatedProductResult,
+        new_images: uploadResult
+      })
   }
 
   private async _uploadProductImages (imageFiles: Express.Multer.File[], product: Product, mainImageFilename: string) {
@@ -202,6 +217,12 @@ class ProductControllerClass extends AutoBindClass {
       )
       const onlyUploadedImages = uploadResult.filter(imageItem => !imageItem.failed)
 
+      if (mainImageFilename) {
+        await productImageRepository.update({ product }, {
+          primary: false
+        })
+      }
+
       await productImageRepository.save(
         onlyUploadedImages.map(uploadedImage =>
           ({
@@ -217,6 +238,53 @@ class ProductControllerClass extends AutoBindClass {
 
       return uploadResult.map(uploadedItem => ({ url: uploadedItem.url, id: uploadedItem.id }))
     }
+  }
+
+  private async removeProductImages (identifiers: string[] = [], product: Product) {
+    const productImageRepository = getRepository(ProductImage)
+
+    if (!identifiers.length) {
+      return
+    }
+
+    const onlyExistentProductImages = await productImageRepository.find({
+      where: identifiers.map(identifier =>
+        ({ id: identifier, product: product })
+      )
+    })
+
+    for (const productImage of onlyExistentProductImages) {
+      await ImageUploadProvider.removeImage(productImage.id)
+    }
+
+    await productImageRepository.remove(onlyExistentProductImages)
+  }
+
+  private async replaceMainImage (identifier: string, product: Product) {
+    const productImageRepository = getRepository(ProductImage)
+    const validIdentifier = validateUUID(identifier) && identifier
+    console.log(identifier)
+    if (!validIdentifier) {
+      return
+    }
+
+    const onlyExistentProductImage = await productImageRepository.findOne(validIdentifier, {
+      where: {
+        product
+      }
+    })
+
+    if (!onlyExistentProductImage) {
+      return
+    }
+
+    await productImageRepository.update({ product }, {
+      primary: false
+    })
+
+    await productImageRepository.update({ id: onlyExistentProductImage.id }, {
+      primary: true
+    })
   }
 }
 

@@ -46,6 +46,42 @@ export const productRoutesTests: RouteTest = (req) => {
         .expect(/"main_image":{/)
     })
 
+    it('Should be able to add image in currently created product', async () => {
+      const product = (await req.get('/products')).body.results
+        .find(item => item.name === 'New test')
+
+      await req
+        .put(`/products/${product.id}`)
+        .set('Cookie', `token=${token}`)
+        .attach('product_images', path.join(__dirname, '..', 'files', 'test-two.png'))
+        .field({
+          'main_image["type"]': 'new',
+          'main_image["identifier"]': 'test-two.png'
+        })
+        .expect(200)
+        .expect(/"new_images":\[{/)
+    })
+
+    it('Should be able to remove product image', async () => {
+      const productId = (await req.get('/products')).body.results
+        .find(item => item.name === 'New test').id
+
+      const productDetails = (await req.get(`/products/${productId}`)).body
+
+      await req
+        .put(`/products/${productId}`)
+        .set('Cookie', `token=${token}`)
+        .send({
+          old_images: [productDetails.images[0].id]
+        })
+        .expect(200)
+
+      const updatedProductDetails = await req
+        .get(`/products/${productId}`)
+
+      expect(updatedProductDetails.body.images).toHaveLength(1)
+    })
+
     it('Should be able to view product by id', async () => {
       const productId = (await req.get('/products')).body.results[0].id
 

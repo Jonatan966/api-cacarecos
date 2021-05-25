@@ -14,7 +14,8 @@ const ProductYupSchema = yup.object()
     main_image: yup.object({
       type: yup.string().matches(/new|storaged/),
       identifier: yup.string()
-    }).nullable()
+    }).nullable(),
+    old_images: yup.array(yup.string()).nullable()
   })
 
 class ProductSchemaTypes {
@@ -30,6 +31,8 @@ class ProductSchemaTypes {
     type: 'new' | 'storaged';
     identifier: string;
   }
+
+  old_images?: string[];
 }
 
 export const ProductObjectSchema: AppObjectSchemaProps<typeof ProductSchemaTypes.prototype> = {
