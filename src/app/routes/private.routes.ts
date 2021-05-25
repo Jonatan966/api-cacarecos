@@ -55,9 +55,12 @@ const routes: RouteList = {
       checkProductMiddleware,
       ProductController.remove
     ],
-    put: [
+    put: ProductController.update
+  },
+  '/products/:id/images': {
+    patch: [
       multerService.array('product_images', 4),
-      ProductController.update
+      ProductController.updateImages
     ]
   },
   '/products/:productId/ratings': {

@@ -51,7 +51,7 @@ export const productRoutesTests: RouteTest = (req) => {
         .find(item => item.name === 'New test')
 
       await req
-        .put(`/products/${product.id}`)
+        .patch(`/products/${product.id}/images`)
         .set('Cookie', `token=${token}`)
         .attach('product_images', path.join(__dirname, '..', 'files', 'test-two.png'))
         .field({
@@ -69,7 +69,7 @@ export const productRoutesTests: RouteTest = (req) => {
       const productDetails = (await req.get(`/products/${productId}`)).body
 
       await req
-        .put(`/products/${productId}`)
+        .patch(`/products/${productId}/images`)
         .set('Cookie', `token=${token}`)
         .send({
           old_images: [productDetails.images[0].id]

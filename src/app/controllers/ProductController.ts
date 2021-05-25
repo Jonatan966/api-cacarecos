@@ -144,12 +144,11 @@ class ProductControllerClass extends AutoBindClass {
     const { id: productId } = req.params
     const {
       $isError,
-      main_image,
-      old_images,
       ...body
     } = await useObjectValidation(req.body, {
       ...ProductObjectSchema,
       YupSchema: makeSchemaFieldsOptional(ProductObjectSchema.YupSchema)
+        .omit(['main_image', 'old_images'])
     })
 
     if ($isError) {
@@ -177,6 +176,48 @@ class ProductControllerClass extends AutoBindClass {
       return useErrorMessage('there is no category with this id', 400, res)
     }
 
+    const updatedProductResult = await productRepository.save({
+      ...product,
+      ...body,
+      category: findedCategory ?? product.category
+    })
+
+    return res
+      .status(200)
+      .json({
+        ...updatedProductResult
+      })
+  }
+
+  @DefinePermissions('EDIT_PRODUCT')
+  async updateImages (req: Request, res: NewResponse) {
+    const { id: productId } = req.params
+    const {
+      $isError,
+      old_images,
+      main_image
+    } = await useObjectValidation(req.body, {
+      ...ProductObjectSchema,
+      YupSchema: makeSchemaFieldsOptional(ProductObjectSchema.YupSchema).pick(['old_images', 'main_image'])
+    })
+
+    if ($isError) {
+      return useErrorMessage('invalid fields', 400, res, {
+        fields: {
+          old_images,
+          main_image
+        }
+      })
+    }
+
+    const productRepository = getRepository(Product)
+
+    const product = await productRepository.findOne(productId)
+
+    if (!product) {
+      return useErrorMessage('product does not exists', 400, res)
+    }
+
     await this.removeProductImages(old_images, product)
 
     if (main_image.type === 'storaged') {
@@ -189,18 +230,9 @@ class ProductControllerClass extends AutoBindClass {
       main_image.type === 'new' ? main_image.identifier : ''
     )
 
-    const updatedProductResult = await productRepository.save({
-      ...product,
-      ...body,
-      category: findedCategory ?? product.category
+    return res.status(200).json({
+      new_images: uploadResult
     })
-
-    return res
-      .status(200)
-      .json({
-        ...updatedProductResult,
-        new_images: uploadResult
-      })
   }
 
   private async _uploadProductImages (imageFiles: Express.Multer.File[], product: Product, mainImageFilename: string) {
