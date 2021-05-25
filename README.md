@@ -1,10 +1,12 @@
-<center>
-  <h1>Cacarecos - Ecommerce</h1>
-</center>
-
+<h1 align="center">Cacarecos - Ecommerce</h1>
 
 ## 📑 Resumo
 Este projeto consiste em uma API para um Ecommerce fictício, que vende produtos próprios das mais variadas categorias. Este projeto tem como objetivo demonstrar meus conhecimentos em criação de APIs, e a capacidade de organização.
+
+## 🛠 Estado atual
+<h3 align="center">
+  ⏳ Em processo de finalização ⏳
+</h3>
 
 ## 🔧 Ferramentas & Serviços
 - NodeJS
