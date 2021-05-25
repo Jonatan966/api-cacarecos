@@ -100,7 +100,7 @@ class AuthControllerClass extends AutoBindClass {
 
     const user = await userRepository.findOne({ loginId }, {
       select: ['id'],
-      relations: ['roles']
+      relations: ['roles', 'roles.permissions']
     })
 
     if (!user) {

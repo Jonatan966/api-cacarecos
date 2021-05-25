@@ -8,8 +8,8 @@ export const orderRoutesTests: RouteTest = (req) => {
     it('Should be able to log in and get token', async () => {
       const response = await req.post('/auth/login')
         .send({
-          email: 'routes-test@email.com',
-          password: 'the-password'
+          email: 'admin@admin.com',
+          password: 'admin'
         })
         .expect(200)
         .expect(/"token":/)
@@ -44,6 +44,22 @@ export const orderRoutesTests: RouteTest = (req) => {
             order.id === createdOrderId
           )
         )
+    })
+
+    it('Should be able to change order status', async () => {
+      await req
+        .patch(`/orders/${createdOrderId}/status`)
+        .set('Cookie', `token=${token}`)
+        .send({ status: 'PREPARING_DELIVERY' })
+        .expect(200)
+    })
+
+    it('Should not be able to change wrong order status', async () => {
+      await req
+        .patch(`/orders/${createdOrderId}/status`)
+        .set('Cookie', `token=${token}`)
+        .send({ status: 'BLA' })
+        .expect(400)
     })
 
     it('Should be able to cancel order', async () => {

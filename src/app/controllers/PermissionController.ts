@@ -11,9 +11,11 @@ import { AppControllerProps, NewResponse } from '@interfaces//Controller'
 import { AutoBindClass } from '@interfaces/AutoBind'
 import { Permission } from '@models/Permission'
 
+import { DefinePermissions } from '../decorators/DefinePermissions'
 import { PermissionObjectSchema } from '../schemas/PermissionSchema'
 
 class PermissionControllerClass extends AutoBindClass implements AppControllerProps {
+  @DefinePermissions('ADD_PERMISSION')
   async create (req: Request, res: NewResponse) {
     const { name, $isError } = await useObjectValidation(req.body, PermissionObjectSchema)
 
@@ -34,6 +36,7 @@ class PermissionControllerClass extends AutoBindClass implements AppControllerPr
       .json(insertedPermission)
   }
 
+  @DefinePermissions('REMOVE_PERMISSION')
   async remove (req: Request, res: NewResponse) {
     const { id } = req.params
 
@@ -49,6 +52,7 @@ class PermissionControllerClass extends AutoBindClass implements AppControllerPr
     return useErrorMessage('permission does not exists', 400, res)
   }
 
+  @DefinePermissions('LIST_PERMISSIONS')
   async index (req: Request, res: NewResponse) {
     const permissionRepository = getRepository(Permission)
 

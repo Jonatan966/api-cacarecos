@@ -3,6 +3,7 @@ import supertest from 'supertest'
 import { app } from '../../app'
 import { finishTests } from '../finishTests'
 import { connectToDatabase } from '../setup'
+import { userAdminCreation } from '../userAdminCreation'
 import { authRoutesTests } from './auth'
 import { categoryRoutesTests } from './category'
 import { orderRoutesTests } from './order'
@@ -16,6 +17,7 @@ const appRoutes = supertest(app)
 
 beforeAll(connectToDatabase)
 
+userAdminCreation()
 permissionRoutesTests(appRoutes)
 roleRoutesTests(appRoutes)
 categoryRoutesTests(appRoutes)

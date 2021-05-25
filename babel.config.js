@@ -19,7 +19,8 @@ module.exports = {
         '@hooks': './src/hooks',
         '@utils': './src/utils',
         '@middlewares': './src/app/middlewares',
-        '@providers': './src/providers'
+        '@providers': './src/providers',
+        '@interfaces': './src/interfaces'
       }
     },
     ],

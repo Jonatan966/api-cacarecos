@@ -11,6 +11,12 @@ export enum OrderStatus {
   Canceled = 'CANCELED'
 }
 
+export type OrderStatusKeys = 'AWAITING_PAYMENT'
+  | 'PREPARING_DELIVERY'
+  | 'ON_DELIVERY'
+  | 'FINISHED'
+  | 'CANCELED'
+
 @Entity('orders')
 export class Order {
   @PrimaryGeneratedColumn('uuid')

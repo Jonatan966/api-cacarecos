@@ -1,9 +1,24 @@
 import request from 'supertest'
 
 export const categoryRoutesTests = (req: request.SuperTest<request.Test>) => {
-  describe('Permision routes tests', () => {
+  describe('Category routes tests', () => {
+    let token = ''
+
+    it('Should be able to log in and get token', async () => {
+      const response = await req.post('/auth/login')
+        .send({
+          email: 'admin@admin.com',
+          password: 'admin'
+        })
+        .expect(200)
+        .expect(/"token":/)
+
+      token = response.body.token
+    })
+
     it('Should be able to insert a category', async () => {
       await req.post('/categories')
+        .set('Cookie', `token=${token}`)
         .send({
           name: 'NEW_TEST',
           color: '#abcdef'
@@ -19,6 +34,7 @@ export const categoryRoutesTests = (req: request.SuperTest<request.Test>) => {
 
     it('Should not be able to create a category with the same name', async () => {
       await req.post('/categories')
+        .set('Cookie', `token=${token}`)
         .send({
           name: 'NEW_TEST',
           color: '#BDBEFD'
@@ -35,6 +51,7 @@ export const categoryRoutesTests = (req: request.SuperTest<request.Test>) => {
       }
 
       await req.post('/categories')
+        .set('Cookie', `token=${token}`)
         .send({
           name: 'ROUTES_TEST',
           color: '#BDBEFD'
@@ -56,6 +73,7 @@ export const categoryRoutesTests = (req: request.SuperTest<request.Test>) => {
       const createdCategory = reqResult.body.results.find(category => category.name === 'NEW_TEST')
 
       await req.delete(`/categories/${createdCategory.id}`)
+        .set('Cookie', `token=${token}`)
         .expect(200)
     })
   })
