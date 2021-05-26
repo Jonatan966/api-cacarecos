@@ -16,6 +16,13 @@ export const authRoutesTests: RouteTest = (req) => {
       token = response.body.token
     })
 
+    it('Should be able to show authenticated user profile', async () => {
+      await req
+        .get('/users/me')
+        .set('Cookie', `token=${token}`)
+        .expect(200)
+    })
+
     it('Should not be able to log in with wrong credentials', async () => {
       await req.post('/auth/login')
         .send({

@@ -78,6 +78,9 @@ const routes: RouteList = {
   '/users': {
     get: UserController.index
   },
+  '/users/me': {
+    get: UserController.myProfile
+  },
   '/users/:id': {
     get: UserController.show,
     delete: UserController.remove

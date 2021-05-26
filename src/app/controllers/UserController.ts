@@ -104,6 +104,17 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
 
     return useErrorMessage('user does not exists', 400, res)
   }
+
+  async myProfile (_req: Request, res: NewResponse) {
+    const userRepository = getRepository(User)
+
+    const user = await userRepository.findOne(res.locals.user.id, {
+      relations: ['roles', 'orders'],
+      select: ['id', 'name', 'email', 'createdAt']
+    })
+
+    return res.status(200).json(user)
+  }
 }
 
 export const UserController = new UserControllerClass()
