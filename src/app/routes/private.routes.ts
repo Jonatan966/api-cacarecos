@@ -85,6 +85,9 @@ const routes: RouteList = {
     get: UserController.show,
     delete: UserController.remove
   },
+  '/users/:userId/roles': {
+    patch: UserController.updateRoles
+  },
   '/orders': {
     post: OrderController.create,
     get: OrderController.index

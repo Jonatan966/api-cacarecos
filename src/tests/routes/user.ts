@@ -33,6 +33,50 @@ export const userRoutesTests: RouteTest = (req) => {
         .expect(/"name":"TEMP_ROUTE_TEST"/)
     })
 
+    it('Should be able to add role to user', async () => {
+      const userList = await req.get('/users')
+        .set('Cookie', `token=${token}`)
+
+      const targetUser = userList.body.results
+        .find(user => user.name === 'TEMP_ROUTE_TEST')
+
+      const rolesList = await req.get('/roles')
+        .set('Cookie', `token=${token}`)
+
+      const targetRole = rolesList.body.results
+        .find(role => role.name === 'EMPLOYER')
+
+      await req.patch(`/users/${targetUser.id}/roles`)
+        .set('Cookie', `token=${token}`)
+        .send({
+          roles: [targetRole.id]
+        })
+        .expect(200)
+
+      await req.get(`/users/${targetUser.id}`)
+        .set('Cookie', `token=${token}`)
+        .expect(/"name":"EMPLOYER"/)
+    })
+
+    it('Should be able to remove user role', async () => {
+      const userList = await req.get('/users')
+        .set('Cookie', `token=${token}`)
+
+      const targetUser = userList.body.results
+        .find(user => user.name === 'TEMP_ROUTE_TEST')
+
+      await req.patch(`/users/${targetUser.id}/roles`)
+        .set('Cookie', `token=${token}`)
+        .send({
+          roles: []
+        })
+        .expect(200)
+
+      await req.get(`/users/${targetUser.id}`)
+        .set('Cookie', `token=${token}`)
+        .expect(/"roles":\[\]/)
+    })
+
     it('Should be able to return users roles', async () => {
       await req.get('/users')
         .set('Cookie', `token=${token}`)

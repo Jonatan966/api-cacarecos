@@ -26,25 +26,25 @@ export const userAdminCreation = () => {
         ,('REMOVE_CATEGORY'),('REMOVE_PRODUCT'),('REMOVE_USER')
        ,('EDIT_USER'),('ADD_PERMISSION'),('LIST_PERMISSIONS')
        ,('REMOVE_PERMISSION'),('ADD_ROLE'),('EDIT_ROLE')
-       ,('REMOVE_ROLE'),('VIEW_ROLES'),('UPDATE_ORDER')
+       ,('REMOVE_ROLE'),('VIEW_ROLES'),('UPDATE_ORDER'),('UPDATE_USER')
       `)
 
       const createdPermissions = await getManager().query('SELECT COUNT(*) FROM permissions')
 
       expect(createdPermissions).toHaveLength(1)
-      expect(createdPermissions[0]).toHaveProperty('count', '23')
+      expect(createdPermissions[0]).toHaveProperty('count', '24')
     })
 
     it('Should be able to create roles', async () => {
       await getManager().query(`
         INSERT INTO roles(name)
-        VALUES('ADMIN')
+        VALUES('ADMIN'),('EMPLOYER')
       `)
 
       const createdRoles = await getManager().query('SELECT COUNT(*) FROM roles')
 
       expect(createdRoles).toHaveLength(1)
-      expect(createdRoles[0]).toHaveProperty('count', '1')
+      expect(createdRoles[0]).toHaveProperty('count', '2')
     })
 
     it('Should be able to relate roles to permissions', async () => {

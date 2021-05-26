@@ -1,7 +1,7 @@
 
 import { Request } from 'express'
 import { getRepository } from 'typeorm'
-import { v4 as generateUUID } from 'uuid'
+import { v4 as generateUUID, validate as validateUUID } from 'uuid'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useHashString } from '@hooks/useHashString'
@@ -12,6 +12,7 @@ import { useResponseBuilder } from '@hooks/useResponseBuilder'
 import { useSearchParams } from '@hooks/useSearchParams'
 import { AppControllerProps, NewResponse } from '@interfaces//Controller'
 import { AutoBindClass } from '@interfaces/AutoBind'
+import { Role } from '@models/Role'
 import { User } from '@models/User'
 
 import { DefinePermissions } from '../decorators/DefinePermissions'
@@ -75,7 +76,10 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
       ['password', 'loginId', 'orders']
     )
 
-    const users = await userRepository.find({ relations: ['roles'] })
+    const users = await userRepository.find({
+      select: ['id', 'name', 'email', 'createdAt'],
+      relations: ['roles']
+    })
 
     const buildedResponse = await useResponseBuilder(
       users,
@@ -114,6 +118,66 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
     })
 
     return res.status(200).json(user)
+  }
+
+  @DefinePermissions('UPDATE_USER')
+  async updateRoles (req: Request, res: NewResponse) {
+    const { roles } = req.body
+    const { userId } = req.params
+
+    if (!validateUUID(userId)) {
+      return useErrorMessage('invalid user id', 400, res)
+    }
+
+    const userRepository = getRepository(User)
+
+    const existingUser = await userRepository.findOne(userId)
+
+    if (!existingUser) {
+      return useErrorMessage('user not found', 400, res)
+    }
+
+    if (!Array.isArray(roles)) {
+      return useErrorMessage('invalid fields', 400, res, {
+        roles: 'missing field or in wrong format'
+      })
+    }
+
+    const wrongRoles = roles.filter(role => !validateUUID(role))
+
+    if (wrongRoles.length) {
+      return useErrorMessage('invalid roles code', 400, res, {
+        invalid_roles: wrongRoles
+      })
+    }
+
+    if (roles.length) {
+      const rolesRepository = getRepository(Role)
+
+      const onlyExistingRoles = await rolesRepository.find({
+        where: roles.map(role => ({
+          id: role
+        }))
+      })
+
+      if (onlyExistingRoles.length < roles.length) {
+        return useErrorMessage('the following roles were not found', 400, res, {
+          missing_roles: roles.filter(role =>
+            !onlyExistingRoles.some(existingRole => existingRole.id === role)
+          )
+        })
+      }
+
+      existingUser.roles = onlyExistingRoles
+    } else existingUser.roles = []
+
+    const updatedUser = await userRepository.save(existingUser)
+
+    if (!updatedUser) {
+      return useErrorMessage('could not update user roles', 500, res)
+    }
+
+    return res.sendStatus(200)
   }
 }
 
