@@ -26,8 +26,7 @@ export class CreateStockTable1622050587132 implements MigrationInterface {
         },
         {
           name: 'registered_by',
-          type: 'uuid',
-          isNullable: false
+          type: 'uuid'
         },
         {
           name: 'created_at',
@@ -41,13 +40,15 @@ export class CreateStockTable1622050587132 implements MigrationInterface {
           name: 'FKStockProduct',
           columnNames: ['product_id'],
           referencedColumnNames: ['id'],
-          referencedTableName: 'products'
+          referencedTableName: 'products',
+          onDelete: 'CASCADE'
         },
         {
           name: 'FKStockOwner',
           columnNames: ['registered_by'],
           referencedColumnNames: ['id'],
-          referencedTableName: 'users'
+          referencedTableName: 'users',
+          onDelete: 'SET NULL'
         }
       ]
     }))
@@ -55,6 +56,6 @@ export class CreateStockTable1622050587132 implements MigrationInterface {
 
   public async down (queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable('stocks')
-    await queryRunner.query('DROP EXTENSION "uuid-ossp"')
+    // await queryRunner.query('DROP EXTENSION "uuid-ossp"')
   }
 }
