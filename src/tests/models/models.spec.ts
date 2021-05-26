@@ -16,6 +16,7 @@ import { relationRatingAndUserTests } from './relation-rating-user'
 import { relationUserAndOrder } from './relation-user-order'
 import { relationUserAndRoleTests } from './relation-user-role'
 import { roleModelTests } from './role'
+import { stockModelTests } from './stock'
 import { userModelTests } from './user'
 
 beforeAll(connectToDatabase)
@@ -35,4 +36,5 @@ ratingModelTests()
 relationRatingAndProductTests()
 relationRatingAndUserTests()
 productImageModelTests()
+stockModelTests()
 finishTests()
