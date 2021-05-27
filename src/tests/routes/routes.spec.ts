@@ -11,6 +11,7 @@ import { permissionRoutesTests } from './permission'
 import { productRoutesTests } from './product'
 import { ratingRoutesTests } from './rating'
 import { roleRoutesTests } from './role'
+import { stockRoutesTests } from './stock'
 import { userRoutesTests } from './user'
 
 const appRoutes = supertest(app)
@@ -26,4 +27,5 @@ userRoutesTests(appRoutes)
 authRoutesTests(appRoutes)
 ratingRoutesTests(appRoutes)
 orderRoutesTests(appRoutes)
+stockRoutesTests(appRoutes)
 finishTests()
