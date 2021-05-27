@@ -12,7 +12,7 @@ export interface NewResponse extends Response {
 
 export interface AppControllerProps {
   create: (req: Request, res: NewResponse) => Promise<NewResponse>;
-  remove: (req: Request, res: NewResponse) => Promise<NewResponse>;
+  remove?: (req: Request, res: NewResponse) => Promise<NewResponse>;
   index: (req: Request, res: NewResponse) => Promise<NewResponse>;
   show?: (req: Request, res: NewResponse) => Promise<NewResponse>;
   update?: (req: Request, res: NewResponse) => Promise<NewResponse>;

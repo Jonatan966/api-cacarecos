@@ -38,5 +38,11 @@ export const finishTests = () => {
 
       expect(result).toHaveLength(2)
     })
+
+    it('Delete created stock', async () => {
+      const result = await getManager().query('DELETE FROM stocks')
+
+      expect(result).toHaveLength(2)
+    })
   })
 }

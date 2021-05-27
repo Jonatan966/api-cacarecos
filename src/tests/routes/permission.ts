@@ -27,7 +27,7 @@ export const permissionRoutesTests = (req: request.SuperTest<request.Test>) => {
     })
 
     it('Should be able to find created permission', async () => {
-      await req.get('/permissions')
+      await req.get('/permissions?name=NEW_TEST')
         .set('Cookie', `token=${token}`)
         .expect(/"name":"NEW_TEST"/)
     })
@@ -44,7 +44,7 @@ export const permissionRoutesTests = (req: request.SuperTest<request.Test>) => {
 
     it('Should be able to delete permission', async () => {
       const reqResult = await req
-        .get('/permissions')
+        .get('/permissions?name=NEW_TEST')
         .set('Cookie', `token=${token}`)
 
       const createdPermission = reqResult.body.results.find(permission => permission.name === 'NEW_TEST')
