@@ -1,0 +1,23 @@
+:root {
+  --white: #e6e8e6;
+  --black: #121212;
+  --red: #d1495b;
+  --darkBlue: #003d5b;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+html {
+  @media (max-width: 1080px) {
+    font-size: 93.75%;
+  }
+
+  @media (max-width: 720px) {
+    font-size: 87.5%;
+  }
+}
