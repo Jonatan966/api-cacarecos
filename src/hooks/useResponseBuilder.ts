@@ -6,7 +6,8 @@ export async function useResponseBuilder<S> (
   searchResult: S[],
   paginator: AppPaginatorProps,
   searchParams: Partial<S>,
-  repository: Repository<S>
+  repository: Repository<S>,
+  extraFields?: any
 ) {
   const page = (paginator.skip / paginator.take) + 1
 
@@ -15,6 +16,7 @@ export async function useResponseBuilder<S> (
   })
 
   return {
+    ...extraFields,
     page,
     previous_page: (page > 1) && `/_page=${page - 1}&_max=${paginator.take}`,
     next_page: ((paginator.skip + paginator.take) < dataCount) && `/_page=${page + 1}&_max=${paginator.take}`,
