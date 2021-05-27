@@ -7,6 +7,7 @@ import { PermissionController } from '@controllers/PermissionController'
 import { ProductController } from '@controllers/ProductController'
 import { RatingController } from '@controllers/RatingController'
 import { RoleController } from '@controllers/RoleController'
+import { StockController } from '@controllers/StockController'
 import { UserController } from '@controllers/UserController'
 import { RouteList } from '@interfaces/RouteList'
 import { checkProductMiddleware } from '@middlewares/CheckProductMiddleware'
@@ -74,6 +75,13 @@ const routes: RouteList = {
       checkProductMiddleware,
       RatingController.remove
     ]
+  },
+  '/products/:productId/stock': {
+    patch: StockController.create,
+    get: StockController.listProductStock
+  },
+  '/stock': {
+    get: StockController.index
   },
   '/users': {
     get: UserController.index
