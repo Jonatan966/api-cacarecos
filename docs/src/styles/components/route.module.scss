@@ -15,12 +15,32 @@
 
     min-width: 6rem;
     text-align: center;
+
+    grid-area: method;
   }
 
   h3 {
     flex: 1;
     padding: 0 0.75rem;
     color: var(--white);
+
+    grid-area: path;
+  }
+
+  img {
+    grid-area: arrow;
+  }
+
+  @media (max-width: 425px) {
+    display: grid;
+
+    grid-template-columns: 1fr auto;
+    gap: 0.25rem;
+
+    grid-template-areas: 
+      'method nothing arrow'
+      'path path arrow'
+    ;
   }
 }
 

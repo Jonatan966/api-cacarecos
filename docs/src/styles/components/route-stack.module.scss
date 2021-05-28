@@ -5,7 +5,7 @@
 }
 
 .routeGroup {
-  background: var(--red);
+  background: var(--darkBlue);
 
   .groupHeader {
     display: flex;
@@ -21,8 +21,8 @@
 
   .groupContainer {
     display: grid;
-    background: var(--red);
+    background: var(--darkBlue);
     gap: .25rem;
   }
-    
+     
 }

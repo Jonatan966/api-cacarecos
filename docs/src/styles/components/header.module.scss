@@ -12,6 +12,14 @@
     max-width: 1120px;
     padding: 0 2rem;
 
+    @media (max-width: 425px) {
+      flex-direction: column;
+
+      a {
+        width: 100%;
+      }
+    }
+
     h1 {
       color: var(--red);
       font-size: 2rem;
