@@ -1,0 +1,37 @@
+.collapserContainer {
+  max-height: 0;
+  transition: max-height .35s ease-in-out, padding .25s ease-in-out, transform .25s ease-in-out;
+  overflow: hidden;
+}
+
+.collapserToggle {
+  &:checked {
+
+    & + .collapserHeader img[alt='Seta'] {
+      transform: rotate(180deg);
+    }
+  
+    & + .collapserHeader + .collapserContainer {
+      max-height: 1000vh;
+      padding: 0 .35rem .35rem .35rem;
+    }
+  }
+}
+
+.collapserHeader {
+  cursor: pointer;
+
+  transition: all .15s;
+
+  img {
+    width: 2rem;
+    margin: 0 .5rem;
+    transition: transform .25s ease-in-out;
+    filter: invert(1);
+  }
+
+  &:hover {
+    filter: brightness(0.85);
+    backdrop-filter: brightness(0.85);
+  }
+}

@@ -105,6 +105,9 @@ const routes: RouteList = {
   },
   '/orders/:id/status': {
     patch: OrderController.changeStatus
+  },
+  '/auth/logout': {
+    get: AuthController.logOut
   }
 }
 

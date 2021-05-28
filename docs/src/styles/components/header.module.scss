@@ -1,0 +1,50 @@
+.appHeader {
+  height: 5rem;
+
+  .headerContent {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    height: 5rem;
+    margin: 0 auto;
+
+    max-width: 1120px;
+    padding: 0 2rem;
+
+    @media (max-width: 425px) {
+      flex-direction: column;
+
+      a {
+        width: 100%;
+      }
+    }
+
+    h1 {
+      color: var(--red);
+      font-size: 2rem;
+    }
+
+    a {
+      background: var(--darkBlue);
+      border: none;
+      color: white;
+    
+      font-weight: bold;
+      padding: 0.75rem 1rem;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      img {
+        margin-right: 0.5rem;
+        filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(133deg) brightness(103%) contrast(103%);
+      }
+    }
+
+    @media (max-width: 768px) {
+      padding: 0 1rem;
+    }  
+  }
+}

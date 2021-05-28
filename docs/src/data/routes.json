@@ -1,0 +1,609 @@
+[
+  {
+    "name": "Categories",
+    "routes": [
+      {
+        "method":"GET",
+        "path":"/categories",
+        "objective":"Listar todas as categorias",
+        "searchParams": {
+          "?id": "busca exata",
+          "?name": "busca semelhante",
+          "?color": "busca semelhante"
+        },
+        "responseExample":{
+          "results": [
+            {
+              "id": "uuid",
+              "name": "Categoria tal",
+              "color": "#ededaa"
+            }
+          ]
+        }             
+      },
+      {
+        "method":"GET",
+        "path":"/categories/{ID}",      
+        "objective":"Visualizar uma categoria específica",
+        "responseExample":{
+          "id": "uuid",
+          "name": "Categoria tal",
+          "color": "#ededaa"
+        }
+      },
+      {
+        "method":"POST",
+        "requireAuth": true,
+        "path":"/categories",
+        "objective":"Cadastrar uma nova categoria",
+        "permissions": ["ADD_CATEGORY"],
+        "responseExample":{
+          "id": "uuid",
+          "name": "Categoria tal",
+          "color": "#ededaa"
+        },
+        "requestExample": {
+          "name": "Categoria tal",
+          "color": "#ededaa"
+        }
+      },
+      {
+        "method": "DELETE",
+        "requireAuth": true,
+        "path": "/categories/{ID}",
+        "objective": "Remover uma determinada categoria",
+        "permissions": ["REMOVE_CATEGORY"],
+        "responseExample": null
+      }
+    ]
+  },
+  {
+    "name": "Products",
+    "routes": [
+      {
+        "method": "GET",
+        "path": "/products",
+        "objective": "Listar todos os produtos",
+        "searchParams": {
+          "?id": "busca exata",
+          "?name": "busca semelhante",
+          "?slug": "busca semelhante",
+          "?category": "busca exata",
+          "?price": "busca exata"
+        },
+        "responseExample": {
+          "results": [
+            {
+              "id": "uuid",
+              "name": "produto tal",
+              "slug": "produto-tal",
+              "category": {
+                "id": "uuid",
+                "name": "Categoria tal",
+                "color": "#ededaa"  
+              },
+              "main_image": "imagem.jpg",
+              "price": 250
+            }
+          ]
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/products",
+        "objective": "Cadastrar um novo produto",
+        "permissions": ["ADD_PRODUCT"],
+        "requestExample": {
+          "name": "produto tal",
+          "slug": "produto-tal",
+          "category": "uuid",
+          "product_images": "",
+          "price": 250
+        },
+        "responseExample": {
+          "id": "uuid",
+          "name": "produto tal",
+          "slug": "produto-tal",
+          "category": {
+            "id": "uuid",
+            "name": "Categoria tal",
+            "color": "#ededaa"  
+          },
+          "images": [
+            {
+              "id":"uuid",
+              "url":"imagem.jpg"
+            }
+          ],
+          "price": 250
+        }
+      },
+      {
+        "method": "DELETE",
+        "requireAuth": true,
+        "path": "/products/{ID}",
+        "objective": "Remover um determinado produto",
+        "permissions": ["REMOVE_PRODUCT"],
+        "responseExample": null
+      },
+      {
+        "method": "PATCH",
+        "path": "/products/{ID}/images",
+        "objective": "Atualizar as imagens de um determinado produto",
+        "permissions": ["EDIT_PRODUCT"],
+        "requestExample": {
+          "old_images": ["uuid"],
+          "main_image": {
+            "type": "new | storaged",
+            "identifier": "imagem.jpg | uuid"
+          }
+        },
+        "responseExample": {
+          "new_images": [
+            {
+              "id": "uuid",
+              "url": "imagem.jpg"
+            }
+          ]
+        }
+      },
+      {
+        "method": "PUT",
+        "requireAuth": true,
+        "path": "/products/{ID}",
+        "objective": "Atualizar um determinado produto",
+        "permissions": ["EDIT_PRODUCT"]
+      },
+      {
+        "method": "GET",
+        "path":"/products/{id}",
+        "objective": "Visualizar um produto específico",
+        "responseExample": {
+          "id": "uuid",
+          "name": "produto tal",
+          "slug": "produto-tal",
+          "other_details": "detalhes",
+          "category": {
+            "id": "uuid",
+            "name": "Categoria tal",
+            "color": "#ededaa"  
+          },
+          "images": [
+            {
+              "id": "uuid",
+              "url": "imagem.jpg",
+              "primary": true
+            }
+          ],
+          "price": 250
+        }
+      }
+    ]
+  },
+  {
+    "name": "Users",
+    "routes": [
+      {
+        "method": "GET",
+        "path": "/users",
+        "objective": "Listar todos os usuários",
+        "permissions": ["LIST_USERS"],
+        "searchParams": {
+          "?id": "busca exata",
+          "?name": "busca semelhante"
+        },
+        "responseExample": {
+          "results": [
+            {
+              "id": "uuid",
+              "name": "fulano",
+              "email": "algo@email.com",
+              "roles": [
+                {
+                  "id":"uuid",
+                  "name":"USER"
+                }
+              ],
+              "createdAt": "date"
+            }
+          ]
+        }
+      },
+      {
+        "method":"POST",
+        "path":"/users",
+        "objective":"Cadastrar um novo usuário",
+        "requestExample": {
+          "name": "nome",
+          "email": "email",
+          "password": "senha"
+        },
+        "responseExample":{
+          "id": "uuid",
+          "name": "nome",
+          "email": "email",
+          "createdAt": "data"
+        }
+      },
+      {
+        "method":"DELETE",
+        "path":"/users/{id}",
+        "objective":"Remover um determinado usuário",
+        "permissions":["REMOVE_USER"]
+      },
+      {
+        "method":"GET",
+        "path":"/users/{id}",
+        "objective":"Visualizar um usuário específico",
+        "permissions":["SHOW_USER"],
+        "responseExample":{
+          "id": "uuid",
+          "name": "nome",
+          "email": "email",
+          "roles": [
+            {
+              "id":"uuid",
+              "name":"nome"
+            }
+          ],
+          "orders": [],
+          "createdAt": "data"
+        }
+      },
+      {
+        "method":"GET",
+        "path":"/users/me",
+        "objective":"Visualizar dados do usuário logado",
+        "responseExample":{
+          "id": "uuid",
+          "name": "nome",
+          "email": "email",
+          "createdAt": "data",
+          "roles": [
+            {
+              "id":"uuid",
+              "name":"USER"
+            }
+          ],
+          "orders": []
+        }
+      },
+      {
+        "method":"PATCH",
+        "path":"/users/{id}/roles",
+        "objective":"Atualizar os cargos de um determinado usuário",
+        "permissions":["UPDATE_USER"],
+        "requestExample": {
+          "roles":["uuid"]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Ratings",
+    "routes": [
+      {
+        "method":"POST",
+        "path":"/product/{id}/ratings",
+        "objective":"Cadastrar um comentário em um determinado produto",
+        "permissions":["ADD_RATING"],
+        "requestExample":{
+          "stars": 5,
+          "content": "opinião"
+        },
+        "responseExample":{
+          "id":"uuid",
+          "stars": 5,
+          "content": "opinião",
+          "createdAt":"date"
+        }
+      },
+      {
+        "method":"DELETE",
+        "path":"/product/{id}/ratings/{id}",
+        "objective":"Remover uma determinada opinião de um determinado produto. Só é possível remover se o usuário logado for o autor da opinião",
+        "permissions":["REMOVE_RATING"]
+      },
+      {
+        "method":"GET",
+        "path":"/product/{id}/ratings",
+        "objective":"Listar todas as opiniões de um determinado produto",
+        "searchParams":{
+          "?id":"busca exata",
+          "?author":"busca exata",
+          "?content":"busca semelhante",
+          "?product":"busca exata",
+          "?stars":"busca exata",
+          "?createdAt":"busca semelhante"
+        },
+        "responseExample":{
+          "results":[
+            {
+              "id":"uuid",
+              "stars": 5,
+              "content": "opinião",
+              "createdAt":"date"
+            }
+          ]
+        }
+      },
+      {
+        "method":"GET",
+        "path":"/product/{id}/ratings/{id}",
+        "objective":"Visualizar uma opinião específica",
+        "responseExample":{
+          "id":"uuid",
+          "stars": 5,
+          "content": "opinião",
+          "createdAt":"date"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Orders",
+    "routes": [
+      {
+        "method":"POST",
+        "path":"/orders",
+        "objective":"Cadastrar um novo pedido",
+        "permissions":["BUY"],
+        "requestExample":{
+          "products": [
+            {
+              "id": "product-uuid",
+              "units": 25
+            }
+          ]
+        },
+        "responseExample":{
+          "id":"order-uuid"
+        }
+      },
+      {
+        "method":"GET",
+        "path":"/orders",
+        "objective":"Listar todos os pedidos. Caso o usuário logado não possuir a permissão VIEW_ORDERS, ele apenas poderá visualizar seus pedidos",
+        "permissions":["BUY","VIEW_ORDERS (Opcional)"],
+        "searchParams":{
+          "?id": "busca exata",
+          "?owner": "busca exata",
+          "?finishedBy": "busca exata",
+          "?status": "busca semelhante",
+          "?amount": "busca exata",
+          "?createdAt": "busca semelhante"
+        },
+        "responseExample": {
+          "results":[
+            {
+              "id": "string",
+              "owner": {
+                "id":"user-id",
+                "name":"fulano"
+              },
+              "finishedBy": {
+                "id":"user-id",
+                "name":"fulano"
+              },
+              "orderProducts": [
+                {
+                  "product": {
+                    "id": "uuid",
+                    "name": "produto tal",
+                    "slug": "produto-tal",
+                    "category": {
+                      "id": "uuid",
+                      "name": "Categoria tal",
+                      "color": "#ededaa"  
+                    },
+                    "main_image": "imagem.jpg",
+                    "price": 250
+                  },
+                  "units":25
+                }
+              ],
+              "status": "AWAITING_PAYMENT",
+              "amount": 25,
+              "createdAt": "date"
+            }
+          ]
+        }
+      },
+      {
+        "method":"DELETE",
+        "path":"/orders/{id}",
+        "objective":"Cancelar um determinado pedido. Caso o usuário logado não possua a permissão CANCEL_ORDER, só será possível cancelar os próprios pedidos. Só é possível fazer o cancelamento para pedidos não concluídos",
+        "permissions":["BUY","CANCEL_ORDER (Opcional)"]
+      },
+      {
+        "method":"PATCH",
+        "path":"/orders/{id}/status",
+        "objective":"Atualizar o status de um determinado pedido",
+        "permissions":["UPDATE_ORDER"],
+        "requestExample":{
+          "status":"AWAITING_PAYMENT"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Permissions",
+    "routes": [
+      {
+        "method":"POST",
+        "path":"/permissions",
+        "objective":"Cadastrar uma nova permissão",
+        "permissions":["ADD_PERMISSION"],
+        "requestExample":{
+          "name":"ADD_USER"
+        },
+        "responseExample":{
+          "id":"permission-id",
+          "name":"ADD_USER"
+        }
+      },
+      {
+        "method":"DELETE",
+        "path":"/permissions/{id}",
+        "objective":"Remover uma determinada permissão",
+        "permissions":["REMOVE_PERMISSION"]
+      },
+      {
+        "method":"GET",
+        "path":"/permissions",
+        "objective":"Listar todas as permissões",
+        "permissions":["LIST_PERMISSIONS"],
+        "searchParams":{
+          "?id":"busca exata",
+          "?name":"busca semelhante"
+        },
+        "responseExample":{
+          "results":[
+            {
+              "id":"permission-id",
+              "name":"ADD_USER"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Roles",
+    "routes": [
+      {
+        "method":"POST",
+        "path":"/roles",
+        "objective":"Cadastrar um novo cargo",
+        "permissions":["ADD_ROLE"],
+        "requestExample":{
+          "name":"EMPLOYER",
+          "permissions":["permission-id"]
+        },
+        "responseExample":{
+          "id":"role-id",
+          "name":"EMPLOYER",
+          "permissions":[
+            {
+              "id":"permission-id",
+              "name":"ADD_USER"
+            }
+          ]
+        }
+      },
+      {
+        "method":"GET",
+        "path":"/roles",
+        "objective":"Listar todos os cargos",
+        "permissions":["VIEW_ROLES"],
+        "searchParams":{
+          "?id":"busca exata",
+          "?name":"busca semelhante"
+        },
+        "responseExample":{
+          "results":[
+            {
+              "id":"role-id",
+              "name":"EMPLOYER",
+              "permissions":[
+                {
+                  "id":"permission-id",
+                  "name":"ADD_USER"
+                }
+              ]    
+            }
+          ]
+        }
+      },
+      {
+        "method":"DELETE",
+        "path":"/roles/{id}",
+        "objective":"Remover um determinado cargo",
+        "permissions":["REMOVE_ROLE"]
+      },
+      {
+        "method":"PATCH",
+        "path":"/roles/{id}/permissions",
+        "objective":"Atualizar as permissões de um determinado cargo",
+        "permissions":["EDIT_ROLE"],
+        "requestExample":{
+          "permissions":["permission-id"]
+        },
+        "responseExample":{
+          "id":"role-id",
+          "name":"EMPLOYER",
+          "permissions":[
+            {
+              "id":"permission-id",
+              "name":"ADD_USER"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Stocks",
+    "routes": [
+      {
+        "method":"PATCH",
+        "path":"/products/{ID}/stock",
+        "objective":"Cadastrar uma nova entrada ou saída de um determinado produto no estoque",
+        "permissions":["ADD_STOCK"],
+        "requestExample":{
+          "units":25
+        },
+        "responseExample":{
+          "id":"stock-id",
+          "units":25,
+          "createdAt":"date"
+        }
+      },
+      {
+        "method":"GET",
+        "path":"/products/{ID}/stock",
+        "objective":"Listar as entradas e saídas de um determinado produto no estoque",
+        "permissions":["LIST_STOCKS"],
+        "searchParams":{
+          "?id":"busca exata",
+          "?units":"busca exata",
+          "?registeredBy":"busca exata",
+          "?createdAt":"busca semelhante"
+        },
+        "responseExample":{
+          "totalProductUnits": 25,
+          "results":[
+            {
+              "id":"stock-id",
+              "units":25,
+              "createdAt":"date"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Auth",
+    "routes": [
+      {
+        "method":"POST",
+        "path":"/auth/login",
+        "objective":"Fazer login",
+        "requestExample":{
+          "email":"algo@email.com",
+          "password":"senha"
+        },
+        "responseExample":{
+          "token":"login-bearer-token"
+        }
+      },
+      {
+        "method":"GET",
+        "path":"/auth/logout",
+        "objective":"Fazer logout",
+        "permissions":[]
+      }
+    ]
+  }
+]

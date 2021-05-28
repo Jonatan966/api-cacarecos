@@ -1,0 +1,102 @@
+.routeItem {
+  background: var(--orange);
+}
+
+.routeHeader {
+  display: flex;
+  align-items: center;
+
+  padding: 1.5rem 1rem;
+
+  h1 {
+    padding: 0 0.85rem;
+    background: var(--yellow);
+    color: var(--black);
+
+    min-width: 6rem;
+    text-align: center;
+
+    grid-area: method;
+  }
+
+  h3 {
+    flex: 1;
+    padding: 0 0.75rem;
+    color: var(--white);
+
+    grid-area: path;
+  }
+
+  img {
+    grid-area: arrow;
+  }
+
+  @media (max-width: 425px) {
+    display: grid;
+
+    grid-template-columns: 1fr auto;
+    gap: 0.25rem;
+
+    grid-template-areas: 
+      'method nothing arrow'
+      'path path arrow'
+    ;
+  }
+}
+
+.routeDetails {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: .75rem;
+
+  background: var(--yellow);
+  padding: 0.85rem;
+
+  > * {
+    width: calc(50% - .75rem);
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+  }
+
+  h1 {
+    padding-bottom: .5rem;
+  }
+
+  .routeRequestExample, .routeResponseExample {
+    display: flex;
+    flex-direction: column;
+
+    > span {
+      flex: 1;
+      align-items: center;
+    }
+  }
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.accessPermissions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+
+  span {
+    zoom: 1.25;
+  }
+
+  h1 {
+    width: 100%;
+  }
+
+  strong {
+    background: var(--darkBlue);
+    color: white;
+
+    padding: .25rem 1.75rem;
+  }
+}

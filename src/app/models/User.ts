@@ -17,7 +17,7 @@ export class User {
   @Column({ select: false })
   password: string;
 
-  @Column({ name: 'login_id' })
+  @Column({ name: 'login_id', select: false })
   loginId: string;
 
   @ManyToMany(() => Role)

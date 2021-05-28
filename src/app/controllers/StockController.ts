@@ -28,7 +28,9 @@ class StockControllerClass extends AutoBindClass implements AppControllerProps {
 
     const productRepository = getRepository(Product)
 
-    const findedProduct = await productRepository.findOne(product_id)
+    const findedProduct = await productRepository.findOne(product_id, {
+      select: ['id']
+    })
 
     if (!findedProduct) {
       return useErrorMessage('product not found', 400, res)
@@ -52,6 +54,9 @@ class StockControllerClass extends AutoBindClass implements AppControllerProps {
       registeredBy: res.locals.user,
       units
     })
+
+    delete insertResult.product
+    delete insertResult.registeredBy
 
     return res.status(201).json(insertResult)
   }
