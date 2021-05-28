@@ -20,8 +20,7 @@ export function Route ({
   responseExample,
   requestExample,
   searchParams,
-  permissions,
-  requireAuth
+  permissions
 }: RouteProps) {
   return (
     <div className={styles.routeItem}>

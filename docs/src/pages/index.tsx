@@ -15,7 +15,7 @@ const IndexPage = () => (
       <Title/>
 
       <RouteStack>
-        {data.map((routeGroup, groupKey) =>
+        {(data as any).map((routeGroup: any, groupKey: any) =>
           <RouteGroup title={routeGroup.name} key={groupKey}>
             {routeGroup.routes.map((route: any, routeKey: number) => 
               <Route {...route} key={routeKey}/>
