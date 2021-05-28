@@ -44,6 +44,7 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
     }
 
     delete insertedUser.password
+    delete insertedUser.loginId
 
     return res.status(201)
       .json(insertedUser)
@@ -72,11 +73,13 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
     const paginator = usePaginator(req.query)
     const searchParams = useSearchParams(req.query,
       userRepository,
-      ['id'],
+      ['id', 'roles'],
       ['password', 'loginId', 'orders']
     )
 
     const users = await userRepository.find({
+      ...paginator,
+      where: searchParams,
       select: ['id', 'name', 'email', 'createdAt'],
       relations: ['roles']
     })
