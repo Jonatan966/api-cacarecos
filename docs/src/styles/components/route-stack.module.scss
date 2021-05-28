@@ -1,0 +1,28 @@
+.routeStack {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+}
+
+.routeGroup {
+  background: var(--red);
+
+  .groupHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 1.5rem 1rem;
+
+    h1 {
+      color: white;
+    }
+  }
+
+  .groupContainer {
+    display: grid;
+    background: var(--red);
+    gap: .25rem;
+  }
+    
+}
