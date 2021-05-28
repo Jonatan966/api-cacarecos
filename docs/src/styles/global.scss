@@ -3,6 +3,10 @@
   --black: #121212;
   --red: #d1495b;
   --darkBlue: #003d5b;
+  --orange: #e76f51;
+  --lightOrange: #f4a261;
+  --yellow: #e9c46a;
+
 }
 
 * {
@@ -19,5 +23,23 @@ html {
 
   @media (max-width: 720px) {
     font-size: 87.5%;
+  }
+
+  background: var(--white);
+}
+
+a {
+  text-decoration: none;
+  color: var(--black);
+}
+
+button {
+  cursor: pointer;
+}
+
+.item-hover {
+  transition: filter 0.2s;
+  &:not(:disabled):hover {
+    filter: brightness(0.85);
   }
 }
