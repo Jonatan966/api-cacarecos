@@ -1,4 +1,10 @@
-<h1 align="center">Cacarecos - Ecommerce</h1>
+<h1 align="center">Cacarecos - Ecommerce (API)</h1>
+
+<p align="center">
+  <a href="https://cacarecos-api-docs.netlify.app/">
+    Visitar documentação
+  </a>
+</p>
 
 ## 📑 Resumo
 Este projeto consiste em uma API para um Ecommerce fictício, que vende produtos próprios das mais variadas categorias. Este projeto tem como objetivo demonstrar meus conhecimentos em criação de APIs, e a capacidade de organização.
