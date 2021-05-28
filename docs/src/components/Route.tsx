@@ -54,7 +54,7 @@ export function Route ({
 
           {searchParams && (
             <div className={styles.routeRequestExample}>
-              <h1>Parâmetros de pesquisa</h1>
+              <h1>Parâmetros de pesquisa (query params)</h1>
               <CodeBlock code={searchParams}/>
             </div>          
           )}
