@@ -41,12 +41,6 @@ const routes: RouteList = {
   },
   '/auth/login': {
     post: AuthController.logIn
-  },
-  '/auth/logout': {
-    get: [
-      AuthController.validate,
-      AuthController.logOut
-    ]
   }
 }
 
