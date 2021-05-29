@@ -22,7 +22,7 @@ class StockControllerClass extends AutoBindClass implements AppControllerProps {
 
     if ($isError) {
       return useErrorMessage('invalid fields', 400, res, {
-        fields: { product_id, units }
+        fields: { units }
       })
     }
 
