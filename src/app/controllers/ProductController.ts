@@ -219,14 +219,14 @@ class ProductControllerClass extends AutoBindClass {
 
     await this.removeProductImages(old_images, product)
 
-    if (main_image.type === 'storaged') {
+    if (main_image?.type === 'storaged') {
       await this.replaceMainImage(main_image.identifier, product)
     }
 
     const uploadResult = await this._uploadProductImages(
       (req.files as any) ?? [],
       product,
-      main_image.type === 'new' ? main_image.identifier : ''
+      main_image?.type === 'new' ? main_image.identifier : ''
     )
 
     return res.status(200).json({
