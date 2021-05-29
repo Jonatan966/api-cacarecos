@@ -75,7 +75,7 @@ class StockControllerClass extends AutoBindClass implements AppControllerProps {
     const stocks = await stockRepository.find({
       ...paginator,
       where: searchParams,
-      relations: ['products']
+      relations: ['product']
     })
 
     const buildedResponse = await useResponseBuilder(
