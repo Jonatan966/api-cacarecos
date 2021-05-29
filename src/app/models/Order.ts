@@ -11,11 +11,11 @@ export enum OrderStatus {
   Canceled = 'CANCELED'
 }
 
-export type OrderStatusKeys = 'AWAITING_PAYMENT'
-  | 'PREPARING_DELIVERY'
-  | 'ON_DELIVERY'
-  | 'FINISHED'
-  | 'CANCELED'
+export type OrderStatusKeys = 'AwaitingPayment'
+  | 'PreparingDelivery'
+  | 'OnDelivery'
+  | 'Finished'
+  | 'Canceled'
 
 @Entity('orders')
 export class Order {

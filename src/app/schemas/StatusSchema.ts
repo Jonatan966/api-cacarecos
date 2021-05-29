@@ -5,7 +5,7 @@ import { OrderStatus, OrderStatusKeys } from '@models/Order'
 
 const StatusYupSchema = object()
   .shape({
-    status: string().oneOf(Object.values(OrderStatus))
+    status: string().oneOf(Object.keys(OrderStatus))
   })
 
 class StatusSchemaTypes {
