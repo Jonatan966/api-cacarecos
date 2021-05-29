@@ -19,23 +19,24 @@ import { StatusObjectSchema } from '../schemas/StatusSchema'
 class OrderControllerClass extends AutoBindClass implements AppControllerProps {
   @DefinePermissions('BUY')
   async create (req: Request, res: NewResponse) {
-    const { products, $isError } = await useObjectValidation(req.body, OrderObjectSchema)
+    const { $isError, ...body } = await useObjectValidation(req.body, OrderObjectSchema)
 
     if ($isError) {
       return useErrorMessage('invalid fields', 400, res, {
-        fields: { products }
+        fields: { ...body }
       })
     }
 
     const productsRepo = getRepository(Product)
 
     const onlyExistingProducts = await productsRepo.find({
-      where: products.map(product => ({ id: product.id })),
-      select: ['id', 'price', 'units']
+      where: body.products.map(product => ({ id: product.id })),
+      select: ['id', 'price'],
+      relations: ['stock']
     })
 
-    if (onlyExistingProducts.length < products.length) {
-      const nonExistentProducts = products.filter(product =>
+    if (onlyExistingProducts.length < body.products.length) {
+      const nonExistentProducts = body.products.filter(product =>
         !onlyExistingProducts.find(existingProduct => existingProduct.id === product.id)
       )
 
@@ -44,8 +45,19 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
       })
     }
 
-    const productsWithInsufficientUnits = products.filter(product =>
-      onlyExistingProducts.find(existingProduct => existingProduct.id === product.id)
+    const productsUnits = onlyExistingProducts.map(product => {
+      const productUnits = product.stock.reduce((acc, stockItem) =>
+        acc + stockItem.units
+      , 0)
+
+      return {
+        id: product.id,
+        units: productUnits
+      }
+    })
+
+    const productsWithInsufficientUnits = body.products.filter(product =>
+      productsUnits.find(productUnits => productUnits.id === product.id)
         .units < product.units
     )
 
@@ -58,7 +70,7 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
     const orderRepo = getRepository(Order)
     const orderProductRepo = getRepository(OrderProduct)
 
-    const orderAmount = products.reduce((acc, product) =>
+    const orderAmount = body.products.reduce((acc, product) =>
       onlyExistingProducts.find(existingProduct =>
         existingProduct.id === product.id
       ).price * product.units + acc
@@ -69,7 +81,7 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
       amount: orderAmount
     })
 
-    const orderProductsList = products.map(product => ({
+    const orderProductsList = body.products.map(product => ({
       order: insertedOrder,
       product: onlyExistingProducts.find(existingProduct => existingProduct.id === product.id),
       units: product.units
@@ -91,13 +103,18 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
     const orderRepo = getRepository(Order)
 
     const paginator = usePaginator(req.query)
+    const customQueryParams = {
+      ...req.query
+    }
+
+    if (!findPermission(res.locals.user.roles, 'VIEW_ORDERS')) {
+      customQueryParams.owner = res.locals.user as any
+    } else if (req.query?.owner) {
+      customQueryParams.owner = req.query?.owner
+    }
+
     const searchParams = useSearchParams(
-      {
-        owner: findPermission(res.locals.user.roles, 'VIEW_ORDERS')
-          ? req.query?.owner
-          : res.locals.user as any,
-        ...req.query
-      },
+      customQueryParams,
       orderRepo,
       ['id', 'status', 'amount', 'finishedBy', 'owner'],
       ['orderProducts']
@@ -117,6 +134,29 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
     )
 
     return res.json(buildedResponse)
+  }
+
+  @DefinePermissions('BUY')
+  async show (req: Request, res: NewResponse) {
+    const { id } = req.params
+    const orderRepo = getRepository(Order)
+
+    const findCondition = {} as any
+
+    if (!findPermission(res.locals.user.roles, 'VIEW_ORDERS')) {
+      findCondition.owner = res.locals.user as any
+    }
+
+    const findedOrder = await orderRepo.findOne(id, {
+      where: findCondition,
+      relations: ['orderProducts']
+    })
+
+    if (!findedOrder) {
+      return useErrorMessage('order is not found', 400, res)
+    }
+
+    return res.json(findedOrder)
   }
 
   @DefinePermissions('BUY')

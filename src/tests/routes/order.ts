@@ -37,20 +37,17 @@ export const orderRoutesTests: RouteTest = (req) => {
 
     it('Should be able to find created order', async () => {
       await req
-        .get('/orders')
+        .get(`/orders/${createdOrderId}`)
         .set('Cookie', `token=${token}`)
-        .expect(orderRes =>
-          orderRes.body.results.find(order =>
-            order.id === createdOrderId
-          )
-        )
+        .expect(200)
+        .expect(new RegExp(`"id":"${createdOrderId}"`))
     })
 
     it('Should be able to change order status', async () => {
       await req
         .patch(`/orders/${createdOrderId}/status`)
         .set('Cookie', `token=${token}`)
-        .send({ status: 'PREPARING_DELIVERY' })
+        .send({ status: 'PreparingDelivery' })
         .expect(200)
     })
 

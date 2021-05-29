@@ -16,7 +16,6 @@ export const productModelTests = () => {
         slug: 'paciencia-em-gotas',
         description: 'Um interessante product',
         price: 250,
-        units: 20,
         category: category[0]
       })
 
@@ -47,7 +46,6 @@ export const productModelTests = () => {
           slug: 'paciencia-com-gotas',
           description: 'Um interessante product',
           price: 250,
-          units: 20,
           category: category[0]
         })
 
@@ -107,7 +105,6 @@ export const productModelTests = () => {
         slug: 'secador-cabelo',
         description: 'Um interessante produto',
         price: 250,
-        units: 20,
         category: category[0]
       })
 

@@ -13,7 +13,9 @@ export async function useObjectValidation<OBJ> (data: any, appSchema: AppObjectS
     const errorMessages = {} as any
 
     error.inner.forEach(error => {
-      errorMessages[error.path] = error.message
+      errorMessages[error.path] = error.errors.length > 1
+        ? error.errors
+        : error.errors.join()
     })
 
     return {

@@ -1,7 +1,6 @@
 
 import { Request } from 'express'
 import { getRepository } from 'typeorm'
-import { validate as validateUUID } from 'uuid'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
@@ -14,11 +13,12 @@ import { NewResponse } from '@interfaces/Controller'
 import { Category } from '@models/Category'
 import { Product } from '@models/Product'
 import { ProductImage } from '@models/ProductImage'
+import { Stock } from '@models/Stock'
 import { ImageUploadProvider } from '@providers/ImageUploadProvider'
 import { makeSchemaFieldsOptional } from '@utils/makeSchemaFieldsOptional'
 import { slugCreator } from '@utils/slugCreator'
 
-import { DefinePermissions } from '../decorators/DefinePermissions'
+import { DefinePermissions, findPermission } from '../decorators/DefinePermissions'
 import { ProductObjectSchema } from '../schemas/ProductSchema'
 
 class ProductControllerClass extends AutoBindClass {
@@ -47,13 +47,22 @@ class ProductControllerClass extends AutoBindClass {
     const insertedProduct = await useInsertOnlyNotExists({
       ...body,
       price: body.price,
-      units: body.units,
       slug: slugCreator(body.slug),
       category: findedCategory
     }, Product, { name: body.name })
 
     if (!insertedProduct) {
       return useErrorMessage('there is already a product with that name', 400, res)
+    }
+
+    if (body.units && findPermission(res.locals.user.roles, 'ADD_STOCK')) {
+      const stockRepository = getRepository(Stock)
+
+      await stockRepository.insert({
+        product: insertedProduct,
+        units: body.units,
+        registeredBy: res.locals.user
+      })
     }
 
     const uploadResult = await this._uploadProductImages(
@@ -92,7 +101,7 @@ class ProductControllerClass extends AutoBindClass {
     const searchParams = useSearchParams(
       req.query,
       productRepository,
-      ['id', 'units', 'price', 'category'],
+      ['id', 'price', 'category'],
       ['ratings', 'images']
     )
 
@@ -220,14 +229,14 @@ class ProductControllerClass extends AutoBindClass {
 
     await this.removeProductImages(old_images, product)
 
-    if (main_image.type === 'storaged') {
+    if (main_image?.type === 'storaged') {
       await this.replaceMainImage(main_image.identifier, product)
     }
 
     const uploadResult = await this._uploadProductImages(
       (req.files as any) ?? [],
       product,
-      main_image.type === 'new' ? main_image.identifier : ''
+      main_image?.type === 'new' ? main_image.identifier : ''
     )
 
     return res.status(200).json({
@@ -294,13 +303,8 @@ class ProductControllerClass extends AutoBindClass {
 
   private async replaceMainImage (identifier: string, product: Product) {
     const productImageRepository = getRepository(ProductImage)
-    const validIdentifier = validateUUID(identifier) && identifier
-    console.log(identifier)
-    if (!validIdentifier) {
-      return
-    }
 
-    const onlyExistentProductImage = await productImageRepository.findOne(validIdentifier, {
+    const onlyExistentProductImage = await productImageRepository.findOne(identifier, {
       where: {
         product
       }

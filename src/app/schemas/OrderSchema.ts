@@ -6,7 +6,7 @@ const OrderYupSchema = object().shape({
   products: array(object().shape({
     id: string().required(),
     units: number().min(1).required()
-  })).required()
+  })).required().min(1)
 })
 
 class OrderSchemaTypes {

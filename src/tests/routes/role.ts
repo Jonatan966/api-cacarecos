@@ -39,6 +39,15 @@ export const roleRoutesTests = (req: request.SuperTest<request.Test>) => {
         .expect(/"name":"BOSS"/)
     })
 
+    it('Should be able to show one role', async () => {
+      const targetRole = await req.get('/roles?name=BOSS')
+        .set('Cookie', `token=${token}`)
+
+      await req.get(`/roles/${targetRole.body.results[0].id}`)
+        .set('Cookie', `token=${token}`)
+        .expect(/"permissions":\[{/)
+    })
+
     it('Should not be able to create a role with the same name', async () => {
       const permissions = (await req.get('/permissions')).body
 

@@ -11,11 +11,11 @@ export enum OrderStatus {
   Canceled = 'CANCELED'
 }
 
-export type OrderStatusKeys = 'AWAITING_PAYMENT'
-  | 'PREPARING_DELIVERY'
-  | 'ON_DELIVERY'
-  | 'FINISHED'
-  | 'CANCELED'
+export type OrderStatusKeys = 'AwaitingPayment'
+  | 'PreparingDelivery'
+  | 'OnDelivery'
+  | 'Finished'
+  | 'Canceled'
 
 @Entity('orders')
 export class Order {
@@ -30,7 +30,7 @@ export class Order {
   @JoinColumn({ name: 'finished_by' })
   finishedBy: User;
 
-  @OneToMany(() => OrderProduct, orderProduct => orderProduct.order, { eager: true })
+  @OneToMany(() => OrderProduct, orderProduct => orderProduct.order)
   orderProducts: OrderProduct[];
 
   @Column()

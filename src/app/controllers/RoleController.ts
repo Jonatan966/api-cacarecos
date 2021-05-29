@@ -1,5 +1,6 @@
 import { Request } from 'express'
 import { getRepository } from 'typeorm'
+import { validate as validateUUID } from 'uuid'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
@@ -59,7 +60,6 @@ class RoleControllerClass extends AutoBindClass implements AppControllerProps {
 
     const roles = await roleRepository.find({
       ...paginator,
-      relations: ['permissions'],
       where: searchParams
     })
 
@@ -71,6 +71,27 @@ class RoleControllerClass extends AutoBindClass implements AppControllerProps {
     )
 
     return res.json(buildedResponse)
+  }
+
+  @DefinePermissions('VIEW_ROLES')
+  async show (req: Request, res: NewResponse) {
+    const { id } = req.params
+
+    if (!validateUUID(id)) {
+      return useErrorMessage('id is not valid', 400, res)
+    }
+
+    const roleRepository = getRepository(Role)
+
+    const findedRole = await roleRepository.findOne(id, {
+      relations: ['permissions']
+    })
+
+    if (!findedRole) {
+      return useErrorMessage('role does not exists', 400, res)
+    }
+
+    return res.json(findedRole)
   }
 
   @DefinePermissions('REMOVE_ROLE')
@@ -106,17 +127,29 @@ class RoleControllerClass extends AutoBindClass implements AppControllerProps {
       })
     }
 
+    const invalidPermissionsID = permissions.filter(permissionID =>
+      !validateUUID(permissionID)
+    )
+
+    if (invalidPermissionsID.length) {
+      return useErrorMessage('invalid permissions id', 400, res, {
+        fields: { invalidPermissionsID }
+      })
+    }
+
     const findedRole = await roleRepository.findOne(id)
 
     if (!findedRole) {
       return useErrorMessage('role does not exists', 400, res)
     }
 
-    const onlyExistingPermissions = await permissionRepository.find({
-      where: permissions.map(permission => ({ id: permission }))
-    })
+    if (permissions.length) {
+      const onlyExistingPermissions = await permissionRepository.find({
+        where: permissions.map(permission => ({ id: permission }))
+      })
 
-    findedRole.permissions = onlyExistingPermissions
+      findedRole.permissions = onlyExistingPermissions
+    } else findedRole.permissions = []
 
     await roleRepository.save(findedRole)
 

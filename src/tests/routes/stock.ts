@@ -22,7 +22,7 @@ export const stockRoutesTests: RouteTest = (req) => {
       await req.patch(`/products/${targetProduct.id}/stock`)
         .set('Cookie', `token=${token}`)
         .send({
-          units: 20
+          units: -300
         })
         .expect(201)
         .expect(/"id":/)
@@ -30,7 +30,7 @@ export const stockRoutesTests: RouteTest = (req) => {
       await req.patch(`/products/${targetProduct.id}/stock`)
         .set('Cookie', `token=${token}`)
         .send({
-          units: -10
+          units: 10
         })
         .expect(201)
         .expect(/"id":/)

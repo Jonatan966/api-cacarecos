@@ -5,5 +5,6 @@ export interface RouteList {
     put?: Function | Function[]
     patch?: Function | Function[]
     delete?: Function | Function[]
+    globalMiddlewares?: Function | Function[]
   }
 }

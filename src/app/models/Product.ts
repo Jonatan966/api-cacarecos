@@ -6,6 +6,7 @@ import { Category } from './Category'
 import { OrderProduct } from './OrderProduct'
 import { ProductImage } from './ProductImage'
 import { Rating } from './Rating'
+import { Stock } from './Stock'
 
 @Entity('products')
 export class Product {
@@ -37,11 +38,11 @@ export class Product {
   @OneToMany(() => Rating, rating => rating.product)
   ratings: Rating[];
 
+  @OneToMany(() => Stock, stock => stock.product)
+  stock: Stock[];
+
   @Column()
   price: number;
-
-  @Column({ select: false })
-  units: number;
 
   @BeforeRemove()
   async removeProductImages () {

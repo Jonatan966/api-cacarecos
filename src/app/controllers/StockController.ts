@@ -22,7 +22,7 @@ class StockControllerClass extends AutoBindClass implements AppControllerProps {
 
     if ($isError) {
       return useErrorMessage('invalid fields', 400, res, {
-        fields: { product_id, units }
+        fields: { units }
       })
     }
 
@@ -75,7 +75,7 @@ class StockControllerClass extends AutoBindClass implements AppControllerProps {
     const stocks = await stockRepository.find({
       ...paginator,
       where: searchParams,
-      relations: ['products']
+      relations: ['product']
     })
 
     const buildedResponse = await useResponseBuilder(
