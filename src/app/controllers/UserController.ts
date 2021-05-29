@@ -128,10 +128,6 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
     const { roles } = req.body
     const { userId } = req.params
 
-    if (!validateUUID(userId)) {
-      return useErrorMessage('invalid user id', 400, res)
-    }
-
     const userRepository = getRepository(User)
 
     const existingUser = await userRepository.findOne(userId)
