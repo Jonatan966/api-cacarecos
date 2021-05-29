@@ -11,6 +11,7 @@ import { StockController } from '@controllers/StockController'
 import { UserController } from '@controllers/UserController'
 import { RouteList } from '@interfaces/RouteList'
 import { checkProductMiddleware } from '@middlewares/CheckProductMiddleware'
+import { validateUUIDParams } from '@middlewares/ValidateUUIDParams'
 import { loadRoutes } from '@utils/loadRoutes'
 
 import { multerService } from '../services/multer'
@@ -27,23 +28,29 @@ const routes: RouteList = {
     get: PermissionController.index
   },
   '/permissions/:id': {
-    delete: PermissionController.remove
+    delete: [
+      validateUUIDParams(),
+      PermissionController.remove
+    ]
   },
   '/roles': {
     post: RoleController.create,
     get: RoleController.index
   },
   '/roles/:id': {
+    globalMiddlewares: validateUUIDParams(),
     delete: RoleController.remove,
     get: RoleController.show
   },
   '/roles/:id/permissions': {
+    globalMiddlewares: validateUUIDParams(),
     patch: RoleController.updateRolePermissions
   },
   '/categories': {
     post: CategoryController.create
   },
   '/categories/:id': {
+    globalMiddlewares: validateUUIDParams(),
     delete: CategoryController.remove
   },
   '/products': {
@@ -53,6 +60,7 @@ const routes: RouteList = {
     ]
   },
   '/products/:id': {
+    globalMiddlewares: validateUUIDParams(),
     delete: [
       checkProductMiddleware,
       ProductController.remove
@@ -60,24 +68,28 @@ const routes: RouteList = {
     put: ProductController.update
   },
   '/products/:id/images': {
+    globalMiddlewares: validateUUIDParams(),
     patch: [
       multerService.array('product_images', 4),
       ProductController.updateImages
     ]
   },
   '/products/:productId/ratings': {
+    globalMiddlewares: validateUUIDParams(['productId']),
     post: [
       checkProductMiddleware,
       RatingController.create
     ]
   },
   '/products/:productId/ratings/:ratingId': {
+    globalMiddlewares: validateUUIDParams(['productId', 'ratingId']),
     delete: [
       checkProductMiddleware,
       RatingController.remove
     ]
   },
   '/products/:productId/stock': {
+    globalMiddlewares: validateUUIDParams(['productId']),
     patch: StockController.create,
     get: StockController.listProductStock
   },
@@ -91,10 +103,12 @@ const routes: RouteList = {
     get: UserController.myProfile
   },
   '/users/:id': {
+    globalMiddlewares: validateUUIDParams(),
     get: UserController.show,
     delete: UserController.remove
   },
   '/users/:userId/roles': {
+    globalMiddlewares: validateUUIDParams(['userId']),
     patch: UserController.updateRoles
   },
   '/orders': {
@@ -102,9 +116,11 @@ const routes: RouteList = {
     get: OrderController.index
   },
   '/orders/:id': {
+    globalMiddlewares: validateUUIDParams(),
     delete: OrderController.remove
   },
   '/orders/:id/status': {
+    globalMiddlewares: validateUUIDParams(),
     patch: OrderController.changeStatus
   },
   '/auth/logout': {
