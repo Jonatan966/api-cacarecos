@@ -1,7 +1,6 @@
 
 import { Request } from 'express'
 import { getRepository } from 'typeorm'
-import { validate as validateUUID } from 'uuid'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
@@ -294,13 +293,8 @@ class ProductControllerClass extends AutoBindClass {
 
   private async replaceMainImage (identifier: string, product: Product) {
     const productImageRepository = getRepository(ProductImage)
-    const validIdentifier = validateUUID(identifier) && identifier
-    console.log(identifier)
-    if (!validIdentifier) {
-      return
-    }
 
-    const onlyExistentProductImage = await productImageRepository.findOne(validIdentifier, {
+    const onlyExistentProductImage = await productImageRepository.findOne(identifier, {
       where: {
         product
       }
