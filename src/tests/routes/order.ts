@@ -50,7 +50,7 @@ export const orderRoutesTests: RouteTest = (req) => {
       await req
         .patch(`/orders/${createdOrderId}/status`)
         .set('Cookie', `token=${token}`)
-        .send({ status: 'PREPARING_DELIVERY' })
+        .send({ status: 'PreparingDelivery' })
         .expect(200)
     })
 
