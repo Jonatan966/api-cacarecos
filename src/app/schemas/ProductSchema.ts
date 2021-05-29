@@ -9,7 +9,7 @@ const ProductYupSchema = yup.object()
     description: yup.string().required(),
     other_details: yup.string(),
     price: yup.number().required(),
-    units: yup.number().required(),
+    units: yup.number().min(1).nullable(),
     category: yup.string().required(),
     main_image: yup.object({
       type: yup.string().matches(/new|storaged/),
@@ -24,7 +24,7 @@ class ProductSchemaTypes {
   description: string;
   other_details?: string;
   price: number;
-  units: number;
+  units?: number;
   category: string;
 
   main_image?: {

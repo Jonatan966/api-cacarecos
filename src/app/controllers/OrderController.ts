@@ -31,7 +31,8 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
 
     const onlyExistingProducts = await productsRepo.find({
       where: body.products.map(product => ({ id: product.id })),
-      select: ['id', 'price', 'units']
+      select: ['id', 'price'],
+      relations: ['stock']
     })
 
     if (onlyExistingProducts.length < body.products.length) {
@@ -44,8 +45,19 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
       })
     }
 
+    const productsUnits = onlyExistingProducts.map(product => {
+      const productUnits = product.stock.reduce((acc, stockItem) =>
+        acc + stockItem.units
+      , 0)
+
+      return {
+        id: product.id,
+        units: productUnits
+      }
+    })
+
     const productsWithInsufficientUnits = body.products.filter(product =>
-      onlyExistingProducts.find(existingProduct => existingProduct.id === product.id)
+      productsUnits.find(productUnits => productUnits.id === product.id)
         .units < product.units
     )
 

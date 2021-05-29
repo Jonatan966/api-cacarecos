@@ -42,11 +42,6 @@ export class CreateProductsTable1619569104177 implements MigrationInterface {
           isNullable: false
         },
         {
-          name: 'units',
-          type: 'integer',
-          isNullable: false
-        },
-        {
           name: 'category_id',
           type: 'uuid',
           isNullable: false

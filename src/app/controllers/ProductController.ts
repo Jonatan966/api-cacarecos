@@ -13,11 +13,12 @@ import { NewResponse } from '@interfaces/Controller'
 import { Category } from '@models/Category'
 import { Product } from '@models/Product'
 import { ProductImage } from '@models/ProductImage'
+import { Stock } from '@models/Stock'
 import { ImageUploadProvider } from '@providers/ImageUploadProvider'
 import { makeSchemaFieldsOptional } from '@utils/makeSchemaFieldsOptional'
 import { slugCreator } from '@utils/slugCreator'
 
-import { DefinePermissions } from '../decorators/DefinePermissions'
+import { DefinePermissions, findPermission } from '../decorators/DefinePermissions'
 import { ProductObjectSchema } from '../schemas/ProductSchema'
 
 class ProductControllerClass extends AutoBindClass {
@@ -46,13 +47,22 @@ class ProductControllerClass extends AutoBindClass {
     const insertedProduct = await useInsertOnlyNotExists({
       ...body,
       price: body.price,
-      units: body.units,
       slug: slugCreator(body.slug),
       category: findedCategory
     }, Product, { name: body.name })
 
     if (!insertedProduct) {
       return useErrorMessage('there is already a product with that name', 400, res)
+    }
+
+    if (body.units && findPermission(res.locals.user.roles, 'ADD_STOCK')) {
+      const stockRepository = getRepository(Stock)
+
+      await stockRepository.insert({
+        product: insertedProduct,
+        units: body.units,
+        registeredBy: res.locals.user
+      })
     }
 
     const uploadResult = await this._uploadProductImages(
@@ -91,7 +101,7 @@ class ProductControllerClass extends AutoBindClass {
     const searchParams = useSearchParams(
       req.query,
       productRepository,
-      ['id', 'units', 'price', 'category'],
+      ['id', 'price', 'category'],
       ['ratings', 'images']
     )
 
