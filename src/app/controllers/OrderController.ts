@@ -19,23 +19,23 @@ import { StatusObjectSchema } from '../schemas/StatusSchema'
 class OrderControllerClass extends AutoBindClass implements AppControllerProps {
   @DefinePermissions('BUY')
   async create (req: Request, res: NewResponse) {
-    const { products, $isError } = await useObjectValidation(req.body, OrderObjectSchema)
+    const { $isError, ...body } = await useObjectValidation(req.body, OrderObjectSchema)
 
     if ($isError) {
       return useErrorMessage('invalid fields', 400, res, {
-        fields: { products }
+        fields: { ...body }
       })
     }
 
     const productsRepo = getRepository(Product)
 
     const onlyExistingProducts = await productsRepo.find({
-      where: products.map(product => ({ id: product.id })),
+      where: body.products.map(product => ({ id: product.id })),
       select: ['id', 'price', 'units']
     })
 
-    if (onlyExistingProducts.length < products.length) {
-      const nonExistentProducts = products.filter(product =>
+    if (onlyExistingProducts.length < body.products.length) {
+      const nonExistentProducts = body.products.filter(product =>
         !onlyExistingProducts.find(existingProduct => existingProduct.id === product.id)
       )
 
@@ -44,7 +44,7 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
       })
     }
 
-    const productsWithInsufficientUnits = products.filter(product =>
+    const productsWithInsufficientUnits = body.products.filter(product =>
       onlyExistingProducts.find(existingProduct => existingProduct.id === product.id)
         .units < product.units
     )
@@ -58,7 +58,7 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
     const orderRepo = getRepository(Order)
     const orderProductRepo = getRepository(OrderProduct)
 
-    const orderAmount = products.reduce((acc, product) =>
+    const orderAmount = body.products.reduce((acc, product) =>
       onlyExistingProducts.find(existingProduct =>
         existingProduct.id === product.id
       ).price * product.units + acc
@@ -69,7 +69,7 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
       amount: orderAmount
     })
 
-    const orderProductsList = products.map(product => ({
+    const orderProductsList = body.products.map(product => ({
       order: insertedOrder,
       product: onlyExistingProducts.find(existingProduct => existingProduct.id === product.id),
       units: product.units
