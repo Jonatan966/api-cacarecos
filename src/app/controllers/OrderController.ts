@@ -113,7 +113,7 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
       ...paginator,
       where: searchParams
     })
-    console.log(searchParams)
+
     const buildedResponse = await useResponseBuilder(
       orders,
       paginator,
@@ -122,6 +122,29 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
     )
 
     return res.json(buildedResponse)
+  }
+
+  @DefinePermissions('BUY')
+  async show (req: Request, res: NewResponse) {
+    const { id } = req.params
+    const orderRepo = getRepository(Order)
+
+    const findCondition = {} as any
+
+    if (!findPermission(res.locals.user.roles, 'VIEW_ORDERS')) {
+      findCondition.owner = res.locals.user as any
+    }
+
+    const findedOrder = await orderRepo.findOne(id, {
+      where: findCondition,
+      relations: ['orderProducts']
+    })
+
+    if (!findedOrder) {
+      return useErrorMessage('order is not found', 400, res)
+    }
+
+    return res.json(findedOrder)
   }
 
   @DefinePermissions('BUY')

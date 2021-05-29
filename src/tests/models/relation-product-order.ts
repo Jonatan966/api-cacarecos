@@ -11,7 +11,9 @@ export const relationProductAndOrderTests = () => {
       const productRepo = getRepository(Product)
       const orderProductRepo = getRepository(OrderProduct)
 
-      const selectedOrder = (await orderRepo.find())[0]
+      const selectedOrder = (await orderRepo.find({
+        relations: ['orderProducts']
+      }))[0]
       const selectedProduct = (await productRepo.find())[0]
 
       if (selectedOrder.orderProducts.length) {

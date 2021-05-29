@@ -30,7 +30,7 @@ export class Order {
   @JoinColumn({ name: 'finished_by' })
   finishedBy: User;
 
-  @OneToMany(() => OrderProduct, orderProduct => orderProduct.order, { eager: true })
+  @OneToMany(() => OrderProduct, orderProduct => orderProduct.order)
   orderProducts: OrderProduct[];
 
   @Column()

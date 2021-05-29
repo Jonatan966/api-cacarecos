@@ -117,6 +117,7 @@ const routes: RouteList = {
   },
   '/orders/:id': {
     globalMiddlewares: validateUUIDParams(),
+    get: OrderController.show,
     delete: OrderController.remove
   },
   '/orders/:id/status': {
