@@ -43,6 +43,9 @@ class RatingControllerClass extends AutoBindClass implements AppControllerProps 
       return useErrorMessage('this user has already submitted a rating', 400, res)
     }
 
+    delete insertedRating.author
+    delete insertedRating.product
+
     return res
       .status(201)
       .json(insertedRating)
