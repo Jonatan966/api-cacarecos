@@ -43,6 +43,8 @@ class FavoriteControllerClass extends AutoBindClass implements AppControllerProp
       product: existingProduct
     })
 
+    delete favoriteResult.owner
+
     return res.status(201).json(favoriteResult)
   }
 
@@ -78,14 +80,14 @@ class FavoriteControllerClass extends AutoBindClass implements AppControllerProp
 
     const paginator = usePaginator(req.query)
     const searchParams = {
-      owner: res.locals.user,
-      ...useSearchParams(req.query, favoriteRepository, ['id', 'owner', 'product'])
+      ...useSearchParams(req.query, favoriteRepository, ['id', 'owner', 'product']),
+      owner: res.locals.user
     }
 
     const favorites = await favoriteRepository.find({
       ...paginator,
       where: searchParams,
-      relations: ['products']
+      relations: ['product']
     })
 
     const buildedResponse = await useResponseBuilder(
