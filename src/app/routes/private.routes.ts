@@ -34,7 +34,8 @@ const routes: RouteList = {
     get: RoleController.index
   },
   '/roles/:id': {
-    delete: RoleController.remove
+    delete: RoleController.remove,
+    get: RoleController.show
   },
   '/roles/:id/permissions': {
     patch: RoleController.updateRolePermissions

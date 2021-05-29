@@ -1,5 +1,6 @@
 import { Request } from 'express'
 import { getRepository } from 'typeorm'
+import { validate as validateUUID } from 'uuid'
 
 import { useErrorMessage } from '@hooks/useErrorMessage'
 import { useInsertOnlyNotExists } from '@hooks/useInsertOnlyNotExists'
@@ -70,6 +71,27 @@ class RoleControllerClass extends AutoBindClass implements AppControllerProps {
     )
 
     return res.json(buildedResponse)
+  }
+
+  @DefinePermissions('VIEW_ROLES')
+  async show (req: Request, res: NewResponse) {
+    const { id } = req.params
+
+    if (!validateUUID(id)) {
+      return useErrorMessage('id is not valid', 400, res)
+    }
+
+    const roleRepository = getRepository(Role)
+
+    const findedRole = await roleRepository.findOne(id, {
+      relations: ['permissions']
+    })
+
+    if (!findedRole) {
+      return useErrorMessage('role does not exists', 400, res)
+    }
+
+    return res.json(findedRole)
   }
 
   @DefinePermissions('REMOVE_ROLE')
