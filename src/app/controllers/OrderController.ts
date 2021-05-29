@@ -91,13 +91,18 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
     const orderRepo = getRepository(Order)
 
     const paginator = usePaginator(req.query)
+    const customQueryParams = {
+      ...req.query
+    }
+
+    if (!findPermission(res.locals.user.roles, 'VIEW_ORDERS')) {
+      customQueryParams.owner = res.locals.user as any
+    } else if (req.query?.owner) {
+      customQueryParams.owner = req.query?.owner
+    }
+
     const searchParams = useSearchParams(
-      {
-        owner: findPermission(res.locals.user.roles, 'VIEW_ORDERS')
-          ? req.query?.owner
-          : res.locals.user as any,
-        ...req.query
-      },
+      customQueryParams,
       orderRepo,
       ['id', 'status', 'amount', 'finishedBy', 'owner'],
       ['orderProducts']
@@ -108,7 +113,7 @@ class OrderControllerClass extends AutoBindClass implements AppControllerProps {
       ...paginator,
       where: searchParams
     })
-
+    console.log(searchParams)
     const buildedResponse = await useResponseBuilder(
       orders,
       paginator,
