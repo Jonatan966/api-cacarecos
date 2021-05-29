@@ -1,5 +1,6 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 
+import { Favorite } from './Favorite'
 import { Order } from './Order'
 import { Role } from './Role'
 
@@ -33,6 +34,9 @@ export class User {
     }
   })
   roles: Role[];
+
+  @OneToMany(() => Favorite, favorite => favorite.owner)
+  favorites: Favorite[];
 
   @OneToMany(() => Order, order => order.owner)
   orders: Order[];

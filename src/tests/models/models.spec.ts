@@ -3,6 +3,7 @@ import 'reflect-metadata'
 import { finishTests } from '../finishTests'
 import { connectToDatabase } from '../setup'
 import { categoryModelTests } from './category'
+import { favoriteModelTests } from './favorite'
 import { orderModelTests } from './order'
 import { permissionModelTests } from './permission'
 import { productModelTests } from './product'
@@ -37,4 +38,5 @@ relationRatingAndProductTests()
 relationRatingAndUserTests()
 productImageModelTests()
 stockModelTests()
+favoriteModelTests()
 finishTests()

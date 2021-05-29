@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import { AuthController } from '@controllers/AuthController'
 import { CategoryController } from '@controllers/CategoryController'
+import { FavoriteController } from '@controllers/FavoriteController'
 import { OrderController } from '@controllers/OrderController'
 import { PermissionController } from '@controllers/PermissionController'
 import { ProductController } from '@controllers/ProductController'
@@ -101,6 +102,14 @@ const routes: RouteList = {
   },
   '/users/me': {
     get: UserController.myProfile
+  },
+  '/users/me/favorites': {
+    get: FavoriteController.index
+  },
+  '/users/me/favorites/:productId': {
+    globalMiddlewares: validateUUIDParams(['productId']),
+    post: FavoriteController.create,
+    delete: FavoriteController.remove
   },
   '/users/:id': {
     globalMiddlewares: validateUUIDParams(),
