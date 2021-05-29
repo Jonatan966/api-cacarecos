@@ -127,17 +127,29 @@ class RoleControllerClass extends AutoBindClass implements AppControllerProps {
       })
     }
 
+    const invalidPermissionsID = permissions.filter(permissionID =>
+      !validateUUID(permissionID)
+    )
+
+    if (invalidPermissionsID.length) {
+      return useErrorMessage('invalid permissions id', 400, res, {
+        fields: { invalidPermissionsID }
+      })
+    }
+
     const findedRole = await roleRepository.findOne(id)
 
     if (!findedRole) {
       return useErrorMessage('role does not exists', 400, res)
     }
 
-    const onlyExistingPermissions = await permissionRepository.find({
-      where: permissions.map(permission => ({ id: permission }))
-    })
+    if (permissions.length) {
+      const onlyExistingPermissions = await permissionRepository.find({
+        where: permissions.map(permission => ({ id: permission }))
+      })
 
-    findedRole.permissions = onlyExistingPermissions
+      findedRole.permissions = onlyExistingPermissions
+    } else findedRole.permissions = []
 
     await roleRepository.save(findedRole)
 
