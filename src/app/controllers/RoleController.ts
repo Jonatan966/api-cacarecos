@@ -59,7 +59,6 @@ class RoleControllerClass extends AutoBindClass implements AppControllerProps {
 
     const roles = await roleRepository.find({
       ...paginator,
-      relations: ['permissions'],
       where: searchParams
     })
 
