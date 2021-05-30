@@ -4,6 +4,7 @@ import { finishTests } from '../finishTests'
 import { connectToDatabase } from '../setup'
 import { categoryModelTests } from './category'
 import { favoriteModelTests } from './favorite'
+import { newsModelTests } from './news'
 import { orderModelTests } from './order'
 import { permissionModelTests } from './permission'
 import { productModelTests } from './product'
@@ -39,4 +40,5 @@ relationRatingAndUserTests()
 productImageModelTests()
 stockModelTests()
 favoriteModelTests()
+newsModelTests()
 finishTests()
