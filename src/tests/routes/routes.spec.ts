@@ -6,6 +6,7 @@ import { connectToDatabase } from '../setup'
 import { userAdminCreation } from '../userAdminCreation'
 import { authRoutesTests } from './auth'
 import { categoryRoutesTests } from './category'
+import { newsRoutesTests } from './news'
 import { orderRoutesTests } from './order'
 import { permissionRoutesTests } from './permission'
 import { productRoutesTests } from './product'
@@ -28,4 +29,5 @@ authRoutesTests(appRoutes)
 ratingRoutesTests(appRoutes)
 orderRoutesTests(appRoutes)
 stockRoutesTests(appRoutes)
+newsRoutesTests(appRoutes)
 finishTests()
