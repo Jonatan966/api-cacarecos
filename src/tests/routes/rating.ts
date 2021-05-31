@@ -20,7 +20,7 @@ export const ratingRoutesTests: RouteTest = (req) => {
       const productID = (await req.get('/products')).body.results[0].id
 
       await req.post(`/products/${productID}/ratings`)
-        .set('Cookie', 'token=' + token)
+        .set('Cookie', 'cacarecos-access-token=Bearer ' + token)
         .send({
           content: 'New test',
           stars: 5
@@ -40,7 +40,7 @@ export const ratingRoutesTests: RouteTest = (req) => {
       const productID = (await req.get('/products')).body.results[0].id
 
       await req.post(`/products/${productID}/ratings`)
-        .set('Cookie', 'token=' + token)
+        .set('Cookie', 'cacarecos-access-token=Bearer ' + token)
         .send({
           content: 'NEW_TEST',
           stars: 2
@@ -53,7 +53,7 @@ export const ratingRoutesTests: RouteTest = (req) => {
       const productID = (await req.get('/products')).body.results[0].id
 
       await req.post(`/products/${productID}/ratings`)
-        .set('Cookie', 'token=' + token)
+        .set('Cookie', 'cacarecos-access-token=Bearer ' + token)
         .send({
           content: 'NEW_TEST'
         })
@@ -69,7 +69,7 @@ export const ratingRoutesTests: RouteTest = (req) => {
       const ratingID = productRatings.find(rating => rating.content === 'New test')?.id
 
       await req.delete(`/products/${product.id}/ratings/${ratingID}`)
-        .set('Cookie', 'token=' + token)
+        .set('Cookie', 'cacarecos-access-token=Bearer ' + token)
         .expect(200)
     })
 
@@ -83,7 +83,7 @@ export const ratingRoutesTests: RouteTest = (req) => {
       }
 
       await req.post(`/products/${product.id}/ratings`)
-        .set('Cookie', 'token=' + token)
+        .set('Cookie', 'cacarecos-access-token=Bearer ' + token)
         .send({
           content: 'ROUTES_TEST',
           stars: 5

@@ -30,7 +30,7 @@ class AuthControllerClass extends AutoBindClass {
       })
   }
 
-  async logOut (req: Request, res: NewResponse) {
+  async logOut (_req: Request, res: NewResponse) {
     const regenerateSuccess = await this._regenerateUserLoginId(res.locals.user.id)
 
     if (!regenerateSuccess) {
@@ -41,7 +41,7 @@ class AuthControllerClass extends AutoBindClass {
   }
 
   async validate (req: Request, res: NewResponse, next: NextFunction) {
-    const { token } = req.cookies
+    const { 'cacarecos-access-token': token } = req.cookies
 
     const decodedToken = await this._checkAndOpenToken(token, res)
 
@@ -113,7 +113,13 @@ class AuthControllerClass extends AutoBindClass {
 
   private async _checkAndOpenToken (token: string, res: NewResponse) {
     try {
-      const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+      if (!token.includes('Bearer ')) {
+        throw new Error('invalid token')
+      }
+
+      const formatedToken = token.replace('Bearer ', '')
+
+      const decodedToken = jwt.verify(formatedToken, process.env.JWT_SECRET)
 
       return decodedToken as { sub: string }
     } catch {

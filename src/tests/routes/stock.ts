@@ -20,7 +20,7 @@ export const stockRoutesTests: RouteTest = (req) => {
       const targetProduct = (await req.get('/products')).body.results[0]
 
       await req.patch(`/products/${targetProduct.id}/stock`)
-        .set('Cookie', `token=${token}`)
+        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
         .send({
           units: -300
         })
@@ -28,7 +28,7 @@ export const stockRoutesTests: RouteTest = (req) => {
         .expect(/"id":/)
 
       await req.patch(`/products/${targetProduct.id}/stock`)
-        .set('Cookie', `token=${token}`)
+        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
         .send({
           units: 10
         })
@@ -40,7 +40,7 @@ export const stockRoutesTests: RouteTest = (req) => {
       const targetProduct = (await req.get('/products')).body.results[0]
 
       await req.get(`/products/${targetProduct.id}/stock`)
-        .set('Cookie', `token=${token}`)
+        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
         .expect(/"totalProductUnits":"10"/)
     })
   })

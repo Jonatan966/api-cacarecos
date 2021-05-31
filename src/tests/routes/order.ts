@@ -22,7 +22,7 @@ export const orderRoutesTests: RouteTest = (req) => {
 
       const testResponse = await req
         .post('/orders')
-        .set('Cookie', `token=${token}`)
+        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
         .send({
           products: [{
             id: product.id,
@@ -38,7 +38,7 @@ export const orderRoutesTests: RouteTest = (req) => {
     it('Should be able to find created order', async () => {
       await req
         .get(`/orders/${createdOrderId}`)
-        .set('Cookie', `token=${token}`)
+        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
         .expect(200)
         .expect(new RegExp(`"id":"${createdOrderId}"`))
     })
@@ -46,7 +46,7 @@ export const orderRoutesTests: RouteTest = (req) => {
     it('Should be able to change order status', async () => {
       await req
         .patch(`/orders/${createdOrderId}/status`)
-        .set('Cookie', `token=${token}`)
+        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
         .send({ status: 'PreparingDelivery' })
         .expect(200)
     })
@@ -54,7 +54,7 @@ export const orderRoutesTests: RouteTest = (req) => {
     it('Should not be able to change wrong order status', async () => {
       await req
         .patch(`/orders/${createdOrderId}/status`)
-        .set('Cookie', `token=${token}`)
+        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
         .send({ status: 'BLA' })
         .expect(400)
     })
@@ -62,7 +62,7 @@ export const orderRoutesTests: RouteTest = (req) => {
     it('Should be able to cancel order', async () => {
       await req
         .delete(`/orders/${createdOrderId}`)
-        .set('Cookie', `token=${token}`)
+        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
         .expect(200)
     })
   })

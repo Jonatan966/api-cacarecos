@@ -21,7 +21,7 @@ export const newsRoutesTests = (req: request.SuperTest<request.Test>) => {
         .main_image.id
 
       await req.post('/news')
-        .set('Cookie', `token=${token}`)
+        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
         .send({
           title: 'news',
           body: 'a news',
@@ -49,7 +49,7 @@ export const newsRoutesTests = (req: request.SuperTest<request.Test>) => {
         .main_image.id
 
       await req.post('/news')
-        .set('Cookie', `token=${token}`)
+        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
         .send({
           title: 'unique news',
           body: 'a news',
@@ -63,7 +63,7 @@ export const newsRoutesTests = (req: request.SuperTest<request.Test>) => {
 
     it('Should be able to search news by title', async () => {
       const searchResponse = await req.get('/news?title=unique news')
-        .set('Cookie', `token=${token}`)
+        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
         .expect(/"title":"unique news"/)
 
       expect(searchResponse.body.results).toHaveLength(1)
@@ -75,7 +75,7 @@ export const newsRoutesTests = (req: request.SuperTest<request.Test>) => {
       const createdNews = reqResult.body.find(news => news.title === 'news')
 
       await req.delete(`/news/${createdNews.id}`)
-        .set('Cookie', `token=${token}`)
+        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
         .expect(200)
     })
   })
