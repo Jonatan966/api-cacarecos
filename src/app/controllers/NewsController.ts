@@ -133,7 +133,7 @@ class NewsControllerClass extends AutoBindClass implements AppControllerProps {
     const removeResult = await newsRepository.remove([findedNews])
 
     if (removeResult) {
-      return res.send(200)
+      return res.sendStatus(200)
     }
 
     return useErrorMessage('it was not possible to remove this news', 500, res)
