@@ -9,6 +9,7 @@
     "start": "NODE_ENV=production node dist/server.js",
     "dev": "NODE_ENV=development ts-node-dev -r tsconfig-paths/register -r dotenv/config --respawn --transpile-only --ignore-watch node_modules --no-notify src/server.ts",
     "test": "NODE_ENV=tests jest --setupFiles dotenv/config --runInBand",
+    "prestart": "npx typeorm migration:run",
     "typeorm-prod": "NODE_ENV=production npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "typeorm": "NODE_ENV=development npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "typeorm-test": "NODE_ENV=tests npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
