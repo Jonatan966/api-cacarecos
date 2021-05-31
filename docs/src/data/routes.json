@@ -605,5 +605,147 @@
         "permissions":[]
       }
     ]
+  },
+  {
+    "name": "Favorites",
+    "routes": [
+      {
+        "method": "GET",
+        "path":"/users/me/favorites",
+        "objective":"Listar todos os produtos favoritos do usuário logado",
+        "permissions":["FAVORITE"],
+        "responseExample": {
+          "results": [
+            {
+              "id": "ed843af1-b0da-4832-9e11-d06810a64320",
+              "product": {
+                "id": "2c0cb6d6-4a10-4340-b402-8d05e6bd0556",
+                "name": "TEST",
+                "slug": "test",
+                "price": 250,
+                "category": {
+                  "id": "470b5dc2-644e-46a2-9e55-2bca0a5330f1",
+                  "name": "TEST",
+                  "color": "#ffffff"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "method":"POST",
+        "path":"/users/me/favorites/{productId}",
+        "objective":"Adicionar um produto a lista de favoritos",
+        "permissions":["FAVORITE"],
+        "responseExample": {
+          "product": {
+            "id": "2c0cb6d6-4a10-4340-b402-8d05e6bd0556",
+            "name": "TEST",
+            "slug": "test",
+            "price": 250,
+            "category": {
+              "id": "470b5dc2-644e-46a2-9e55-2bca0a5330f1",
+              "name": "TEST",
+              "color": "#ffffff"
+            }
+          },
+          "id": "ed843af1-b0da-4832-9e11-d06810a64320"
+        }
+      },
+      {
+        "method":"DELETE",
+        "path":"/users/me/favorites/{productId}",
+        "objective":"Remover um produto da lista de favoritos",
+        "permissions":["FAVORITE"]
+      }
+    ]
+  },
+  {
+    "name":"News",
+    "routes":[
+      {
+        "method":"GET",
+        "path":"/news",
+        "objective":"Listar todas as novidades",
+        "permissions":["LIST_NEWS"],
+        "searchParams": {
+          "?id": "busca exata",
+          "?title": "busca semelhante",
+          "?body": "busca semelhante",
+          "?actionText": "busca semelhante",
+          "?actionUrl": "busca semelhante",
+          "?isMain": "busca exata",
+          "?createdAt": "busca exata",
+          "?productImage": "busca exata"
+        },
+        "responseExample":{
+          "results": [
+            {
+              "id": "ddfbcfeb-920c-4607-898c-ee44d5b46f99",
+              "title": "Novos produtos",
+              "body": "Venha conferir nossos novos produtos",
+              "actionText": "Confira já",
+              "actionUrl": "link.com",
+              "isMain": true,
+              "createdAt": "2021-05-31T02:38:04.058Z",
+              "productImage": {
+                "id": "product-image-id",
+                "url": "http://link.com/imagem",
+                "primary": true
+              }
+            }
+          ]
+        }
+      },
+      {
+        "method":"POST",
+        "path":"/news",
+        "objective":"Cadastrar uma novidade",
+        "requestExample":{
+          "title": "Novos produtos",
+          "body": "Venha conferir nossos novos produtos",
+          "action_text": "Confira já",
+          "action_url": "link.com",
+          "product_image": "product-image-id"
+        },
+        "responseExample":{
+          "action_url": "link.com",
+          "action_text": "Confira já",
+          "body": "Venha conferir nossos novos produtos",
+          "title": "Novos produtos",
+          "actionText": "Confira já",
+          "actionUrl": "link.com",
+          "isMain": true,
+          "productImage": {
+            "id": "product-image-id",
+            "url": "http://link.com/imagem",
+            "primary": true
+          },
+          "id": "ddfbcfeb-920c-4607-898c-ee44d5b46f99"
+        }
+      },
+      {
+        "method":"GET",
+        "path":"/main-news",
+        "objective":"Listar somente as novidades principais",
+        "responseExample": [
+          {
+            "id": "ddfbcfeb-920c-4607-898c-ee44d5b46f99",
+            "title": "Novos produtos",
+            "body": "Venha conferir nossos novos produtos",
+            "actionText": "Confira já",
+            "actionUrl": "link.com",
+            "isMain": true,
+            "createdAt": "2021-05-31T02:38:04.058Z",
+            "productImage": {
+              "id": "product-image-id",
+              "url": "http://link.com/imagem",
+              "primary": true
+            }
+          }
+        ]
+      }
+    ]
   }
 ]
