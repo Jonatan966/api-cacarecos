@@ -1,1 +1,0 @@
-release: yarn typeorm-prod migration:run
