@@ -33,7 +33,7 @@ export class Order {
   @OneToMany(() => OrderProduct, orderProduct => orderProduct.order)
   orderProducts: OrderProduct[];
 
-  @Column()
+  @Column({ type: 'enum', enum: OrderStatus })
   status: OrderStatus;
 
   @Column()
