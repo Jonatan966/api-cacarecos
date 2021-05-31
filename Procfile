@@ -1,1 +1,1 @@
-release: yarn typeorm-prod migration:run
+release: yarn && yarn typeorm-prod migration:run
