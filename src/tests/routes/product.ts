@@ -130,10 +130,13 @@ export const productRoutesTests: RouteTest = (req) => {
 
       await req.post('/products')
         .set('Cookie', `token=${token}`)
-        .send({
+        .attach('product_images', path.join(__dirname, '..', 'files', 'test.png'))
+        .field({
           name: 'Routes test',
           description: 'The new route test',
           slug: 'new-route-test',
+          'main_image["type"]': 'new',
+          'main_image["identifier"]': 'test.png',
           price: 255,
           units: 300,
           category

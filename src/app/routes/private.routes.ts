@@ -3,6 +3,7 @@ import { Router } from 'express'
 import { AuthController } from '@controllers/AuthController'
 import { CategoryController } from '@controllers/CategoryController'
 import { FavoriteController } from '@controllers/FavoriteController'
+import { NewsController } from '@controllers/NewsController'
 import { OrderController } from '@controllers/OrderController'
 import { PermissionController } from '@controllers/PermissionController'
 import { ProductController } from '@controllers/ProductController'
@@ -135,6 +136,14 @@ const routes: RouteList = {
   },
   '/auth/logout': {
     get: AuthController.logOut
+  },
+  '/news': {
+    get: NewsController.listAll,
+    post: NewsController.create
+  },
+  '/news/:newsId': {
+    put: NewsController.update,
+    delete: NewsController.remove
   }
 }
 

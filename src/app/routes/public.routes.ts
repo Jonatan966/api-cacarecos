@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import { AuthController } from '@controllers/AuthController'
 import { CategoryController } from '@controllers/CategoryController'
+import { NewsController } from '@controllers/NewsController'
 import { ProductController } from '@controllers/ProductController'
 import { RatingController } from '@controllers/RatingController'
 import { UserController } from '@controllers/UserController'
@@ -46,6 +47,9 @@ const routes: RouteList = {
   },
   '/auth/login': {
     post: AuthController.logIn
+  },
+  '/main-news': {
+    get: NewsController.index
   }
 }
 

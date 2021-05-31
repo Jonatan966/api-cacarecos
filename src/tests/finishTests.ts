@@ -44,5 +44,11 @@ export const finishTests = () => {
 
       expect(result).toHaveLength(2)
     })
+
+    it('Delete created news', async () => {
+      const result = await getManager().query('DELETE FROM news')
+
+      expect(result).toHaveLength(2)
+    })
   })
 }

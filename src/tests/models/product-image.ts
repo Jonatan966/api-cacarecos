@@ -37,5 +37,20 @@ export const productImageModelTests = () => {
 
       expect(result).toHaveProperty('affected', 1)
     })
+
+    it('Should be able to create a temporary product image', async () => {
+      const productImageRepository = getRepository(ProductImage)
+      const productRepository = getRepository(Product)
+
+      const insertedProductImage = await productImageRepository.save({
+        id: 'TEMP',
+        product: await productRepository.findOne({
+          slug: 'secador-cabelo'
+        }),
+        url: 'test.com/image.png'
+      })
+
+      expect(insertedProductImage).toHaveProperty('id')
+    })
   })
 }

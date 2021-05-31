@@ -45,6 +45,9 @@ function validateQueryParams<S> (queryParams: any[][], targetRepository: Reposit
         case Date:
           validatedColumn = new Date(isNaN(Date.parse(columnValue)) ? columnValue : Date.now())
           break
+        case Boolean:
+          validatedColumn = columnValue === 'true'
+          break
       }
     }
 
