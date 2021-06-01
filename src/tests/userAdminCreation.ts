@@ -40,13 +40,13 @@ export const userAdminCreation = () => {
     it('Should be able to create roles', async () => {
       await getManager().query(`
         INSERT INTO roles(name)
-        VALUES('ADMIN'),('EMPLOYER')
+        VALUES('USER'),('ADMIN'),('EMPLOYER')
       `)
 
       const createdRoles = await getManager().query('SELECT COUNT(*) FROM roles')
 
       expect(createdRoles).toHaveLength(1)
-      expect(createdRoles[0]).toHaveProperty('count', '2')
+      expect(createdRoles[0]).toHaveProperty('count', '3')
     })
 
     it('Should be able to relate roles to permissions', async () => {
