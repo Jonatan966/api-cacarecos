@@ -31,6 +31,16 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
       })
     }
 
+    const rolesRepository = getRepository(Role)
+
+    const initialUserRole = await rolesRepository.findOne({
+      name: 'USER'
+    })
+
+    if (!initialUserRole) {
+      return useErrorMessage('could not create user', 500, res)
+    }
+
     const userHashedPassword = await useHashString(body.password)
 
     const insertedUser = await useInsertOnlyNotExists({
