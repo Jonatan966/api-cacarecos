@@ -46,7 +46,8 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
     const insertedUser = await useInsertOnlyNotExists({
       ...body,
       password: userHashedPassword,
-      loginId: generateUUID()
+      loginId: generateUUID(),
+      roles: [initialUserRole]
     }, User, { email: body.email })
 
     if (!insertedUser) {
