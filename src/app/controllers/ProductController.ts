@@ -138,7 +138,8 @@ class ProductControllerClass extends AutoBindClass {
     const productRepository = getRepository(Product)
 
     const product = await productRepository.findOne(id, {
-      relations: ['images']
+      select: ['id', 'name', 'slug', 'description', 'otherDetails', 'price'],
+      relations: ['images', 'category']
     })
 
     if (product) {
