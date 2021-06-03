@@ -112,7 +112,7 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
     const userRepository = getRepository(User)
 
     const user = await userRepository.findOne(id, {
-      relations: ['roles', 'orders'],
+      relations: ['roles', 'roles.permissions', 'orders'],
       select: ['id', 'name', 'email', 'createdAt']
     })
 
@@ -127,7 +127,7 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
     const userRepository = getRepository(User)
 
     const user = await userRepository.findOne(res.locals.user.id, {
-      relations: ['roles', 'orders'],
+      relations: ['roles', 'roles.permissions', 'orders'],
       select: ['id', 'name', 'email', 'createdAt']
     })
 
