@@ -20,7 +20,7 @@ export const favoriteRoutesTests = (req: request.SuperTest<request.Test>) => {
       const targetProduct = (await req.get('/products?slug=new-route-test')).body.results[0]
 
       await req.post(`/users/me/favorites/${targetProduct.id}`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(201)
         .expect(/"id":/)
     })
@@ -34,7 +34,7 @@ export const favoriteRoutesTests = (req: request.SuperTest<request.Test>) => {
       const targetProduct = (await req.get('/products?slug=new-route-test')).body.results[0]
 
       await req.post(`/users/me/favorites/${targetProduct}`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(400)
         .expect(/"error":/)
     })
@@ -52,7 +52,7 @@ export const favoriteRoutesTests = (req: request.SuperTest<request.Test>) => {
       const targetProduct = (await req.get('/products?slug=new-route-test')).body.results[0]
 
       await req.delete(`/users/me/favorites/${targetProduct}`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
     })
   })

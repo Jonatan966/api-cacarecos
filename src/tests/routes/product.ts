@@ -22,7 +22,7 @@ export const productRoutesTests: RouteTest = (req) => {
       const category = (await req.get('/categories')).body.results[0].id
 
       await req.post('/products')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .attach('product_images', path.join(__dirname, '..', 'files', 'test.png'))
         .field({
           name: 'New test',
@@ -52,7 +52,7 @@ export const productRoutesTests: RouteTest = (req) => {
 
       await req
         .patch(`/products/${product.id}/images`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .attach('product_images', path.join(__dirname, '..', 'files', 'test-two.png'))
         .field({
           'main_image["type"]': 'new',
@@ -70,7 +70,7 @@ export const productRoutesTests: RouteTest = (req) => {
 
       await req
         .patch(`/products/${productId}/images`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           old_images: [productDetails.images[0].id]
         })
@@ -96,7 +96,7 @@ export const productRoutesTests: RouteTest = (req) => {
 
       await req
         .put(`/products/${product.id}`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           other_details: 'Um detalhe'
         })
@@ -107,7 +107,7 @@ export const productRoutesTests: RouteTest = (req) => {
       const category = (await req.get('/categories')).body.results[0].id
 
       await req.post('/products')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           name: 'New test',
           description: 'The new test',
@@ -129,7 +129,7 @@ export const productRoutesTests: RouteTest = (req) => {
       }
 
       await req.post('/products')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .attach('product_images', path.join(__dirname, '..', 'files', 'test.png'))
         .field({
           name: 'Routes test',
@@ -158,7 +158,7 @@ export const productRoutesTests: RouteTest = (req) => {
       const createdProduct = reqResult.body.results.find(product => product.name === 'New test')
 
       await req.delete(`/products/${createdProduct.id}`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
     })
   })
