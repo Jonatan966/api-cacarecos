@@ -29,68 +29,68 @@ export const userRoutesTests: RouteTest = (req) => {
 
     it('Should be able to find created user', async () => {
       await req.get('/users')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(/"name":"TEMP_ROUTE_TEST"/)
     })
 
     it('Should be able to add role to user', async () => {
       const userList = await req.get('/users')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
 
       const targetUser = userList.body.results
         .find(user => user.name === 'TEMP_ROUTE_TEST')
 
       const rolesList = await req.get('/roles')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
 
       const targetRole = rolesList.body.results
         .find(role => role.name === 'EMPLOYER')
 
       await req.patch(`/users/${targetUser.id}/roles`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           roles: [targetRole.id]
         })
         .expect(200)
 
       await req.get(`/users/${targetUser.id}`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(/"name":"EMPLOYER"/)
     })
 
     it('Should be able to remove user role', async () => {
       const userList = await req.get('/users')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
 
       const targetUser = userList.body.results
         .find(user => user.name === 'TEMP_ROUTE_TEST')
 
       await req.patch(`/users/${targetUser.id}/roles`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           roles: []
         })
         .expect(200)
 
       await req.get(`/users/${targetUser.id}`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(/"roles":\[\]/)
     })
 
     it('Should be able to return users roles', async () => {
       await req.get('/users')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(/"roles":\[/)
     })
 
     it('Should be able to view one user and their relationships', async () => {
       const userId = (await req
         .get('/users')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
       ).body.results[0].id
 
       await req.get(`/users/${userId}`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(/"id":/)
         .expect(/"roles":/)
         .expect(/"orders":/)
@@ -98,7 +98,7 @@ export const userRoutesTests: RouteTest = (req) => {
 
     it('Should not be able to create a user with the same email', async () => {
       await req.post('/users')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           name: 'OTHER_TEST',
           email: 'temp-route-test@email.com',
@@ -110,19 +110,19 @@ export const userRoutesTests: RouteTest = (req) => {
 
     it('Should be able to delete user', async () => {
       const reqResult = await req.get('/users')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
 
       const createdUser = reqResult.body.results.find(user => user.name === 'TEMP_ROUTE_TEST')
 
       await req.delete(`/users/${createdUser.id}`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
     })
 
     it('Should be able to create a temporary user for next tests', async () => {
       const existentUsers = (await req
         .get('/users')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
       ).body.results
 
       if (existentUsers.find(user => user.name === 'ROUTES_TEST')) {
@@ -130,7 +130,7 @@ export const userRoutesTests: RouteTest = (req) => {
       }
 
       await req.post('/users')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           name: 'ROUTES_TEST',
           email: 'routes-test@email.com',

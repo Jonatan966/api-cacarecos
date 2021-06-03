@@ -18,7 +18,7 @@ export const categoryRoutesTests = (req: request.SuperTest<request.Test>) => {
 
     it('Should be able to insert a category', async () => {
       await req.post('/categories')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           name: 'NEW_TEST',
           color: '#abcdef'
@@ -34,7 +34,7 @@ export const categoryRoutesTests = (req: request.SuperTest<request.Test>) => {
 
     it('Should not be able to create a category with the same name', async () => {
       await req.post('/categories')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           name: 'NEW_TEST',
           color: '#BDBEFD'
@@ -51,7 +51,7 @@ export const categoryRoutesTests = (req: request.SuperTest<request.Test>) => {
       }
 
       await req.post('/categories')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           name: 'ROUTES_TEST',
           color: '#BDBEFD'
@@ -73,7 +73,7 @@ export const categoryRoutesTests = (req: request.SuperTest<request.Test>) => {
       const createdCategory = reqResult.body.results.find(category => category.name === 'NEW_TEST')
 
       await req.delete(`/categories/${createdCategory.id}`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
     })
   })

@@ -19,7 +19,7 @@ export const authRoutesTests: RouteTest = (req) => {
     it('Should be able to show authenticated user profile', async () => {
       await req
         .get('/users/me')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
     })
 
@@ -35,13 +35,13 @@ export const authRoutesTests: RouteTest = (req) => {
 
     it('Should be able to log out', async () => {
       await req.get('/auth/logout')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
     })
 
     it('Should not be able to log out with the invalidated token', async () => {
       await req.get('/auth/logout')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(400)
     })
   })

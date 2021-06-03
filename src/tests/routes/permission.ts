@@ -18,7 +18,7 @@ export const permissionRoutesTests = (req: request.SuperTest<request.Test>) => {
 
     it('Should be able to insert a permission', async () => {
       await req.post('/permissions')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           name: 'NEW_TEST'
         })
@@ -28,13 +28,13 @@ export const permissionRoutesTests = (req: request.SuperTest<request.Test>) => {
 
     it('Should be able to find created permission', async () => {
       await req.get('/permissions?name=NEW_TEST')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(/"name":"NEW_TEST"/)
     })
 
     it('Should not be able to create a permission with the same name', async () => {
       await req.post('/permissions')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           name: 'NEW_TEST'
         })
@@ -45,19 +45,19 @@ export const permissionRoutesTests = (req: request.SuperTest<request.Test>) => {
     it('Should be able to delete permission', async () => {
       const reqResult = await req
         .get('/permissions?name=NEW_TEST')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
 
       const createdPermission = reqResult.body.results.find(permission => permission.name === 'NEW_TEST')
 
       await req.delete(`/permissions/${createdPermission.id}`)
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
     })
 
     it('Should be able to create a temporary permission for next tests', async () => {
       const existentPermissions = (await req
         .get('/permissions')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
       ).body.results
 
       if (existentPermissions.find(permission => permission.name === 'ROUTES_TEST')) {
@@ -65,7 +65,7 @@ export const permissionRoutesTests = (req: request.SuperTest<request.Test>) => {
       }
 
       await req.post('/permissions')
-        .set('Cookie', `cacarecos-access-token=Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           name: 'ROUTES_TEST'
         })

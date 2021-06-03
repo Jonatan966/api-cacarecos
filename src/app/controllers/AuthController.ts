@@ -41,7 +41,7 @@ class AuthControllerClass extends AutoBindClass {
   }
 
   async validate (req: Request, res: NewResponse, next: NextFunction) {
-    const { 'cacarecos-access-token': token } = req.cookies
+    const token = String(req.headers.authorization)
 
     const decodedToken = await this._checkAndOpenToken(token, res)
 
