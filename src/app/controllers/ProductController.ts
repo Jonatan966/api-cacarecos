@@ -105,6 +105,24 @@ class ProductControllerClass extends AutoBindClass {
       ['ratings', 'images']
     )
 
+    /*
+      // Selecionar produtos e suas unidades
+      SELECT products.name, SUM(stocks.units) AS units
+      FROM products
+      INNER JOIN stocks
+      ON stocks.product_id = products.id
+      GROUP BY products.id;
+    */
+
+    /*
+      // Selecionar produtos e suas imagens principais
+      SELECT products.name, product_images.id
+      FROM products
+      INNER JOIN product_images
+      ON product_images.product_id = products.id
+      WHERE product_images.primary = true
+      GROUP BY 1,2;
+    */
     const products = await productRepository.find({
       ...paginator,
       where: searchParams
@@ -147,6 +165,20 @@ class ProductControllerClass extends AutoBindClass {
     }
 
     return useErrorMessage('product does not exists', 400, res)
+  }
+
+  async showProductImages (req: Request, res: NewResponse) {
+    const { id } = req.params
+
+    const productImagesRepository = getRepository(ProductImage)
+
+    const productImages = await productImagesRepository.find({
+      where: {
+        product: id
+      }
+    })
+
+    return res.send(productImages)
   }
 
   @DefinePermissions('EDIT_PRODUCT')

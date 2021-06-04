@@ -28,6 +28,10 @@ const routes: RouteList = {
     globalMiddlewares: validateUUIDParams(),
     get: ProductController.show
   },
+  '/products/:id/images': {
+    globalMiddlewares: validateUUIDParams(),
+    get: ProductController.showProductImages
+  },
   '/products/:productId/ratings': {
     globalMiddlewares: validateUUIDParams(['productId']),
     get: [
