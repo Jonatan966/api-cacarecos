@@ -305,20 +305,22 @@ class ProductControllerClass extends AutoBindClass {
         })
       }
 
-      await productImageRepository.save(
-        onlyUploadedImages.map(uploadedImage =>
-          ({
-            id: uploadedImage.id,
-            url: uploadedImage.url,
-            product,
-            primary: formatedImageFiles.find(imageFile =>
-              imageFile.path === uploadedImage.oldpath
-            ).originalname === mainImageFilename
-          })
-        )
+      const preSavedImagesContent = onlyUploadedImages.map(uploadedImage =>
+        ({
+          id: uploadedImage.id,
+          url: uploadedImage.url,
+          product,
+          primary: formatedImageFiles.find(imageFile =>
+            imageFile.path === uploadedImage.oldpath
+          ).originalname === mainImageFilename
+        })
       )
 
-      return uploadResult.map(uploadedItem => ({ url: uploadedItem.url, id: uploadedItem.id }))
+      await productImageRepository.save(preSavedImagesContent)
+
+      return preSavedImagesContent.map(imageContent =>
+        ({ url: imageContent.url, id: imageContent.id, primary: imageContent.primary })
+      )
     }
   }
 
