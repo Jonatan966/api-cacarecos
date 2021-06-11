@@ -80,11 +80,19 @@ class ProductControllerClass extends AutoBindClass {
   }
 
   @DefinePermissions('REMOVE_PRODUCT')
-  async remove (_req: Request, res: NewResponse) {
+  async remove (req: Request, res: NewResponse) {
+    const { id } = req.params
+
     const productRepository = getRepository(Product)
 
     try {
-      await productRepository.remove([res.locals.product])
+      const findedProduct = await productRepository.findOne(id)
+
+      if (!findedProduct) {
+        return useErrorMessage('product does not exists', 400, res)
+      }
+
+      await productRepository.remove([findedProduct])
 
       return res
         .sendStatus(200)

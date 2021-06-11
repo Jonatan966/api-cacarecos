@@ -63,10 +63,7 @@ const routes: RouteList = {
   },
   '/products/:id': {
     globalMiddlewares: validateUUIDParams(),
-    delete: [
-      checkProductMiddleware,
-      ProductController.remove
-    ],
+    delete: ProductController.remove,
     put: ProductController.update
   },
   '/products/:id/images': {

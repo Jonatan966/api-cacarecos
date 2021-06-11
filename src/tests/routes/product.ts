@@ -160,6 +160,11 @@ export const productRoutesTests: RouteTest = (req) => {
       await req.delete(`/products/${createdProduct.id}`)
         .set('Authorization', `Bearer ${token}`)
         .expect(200)
+
+      const expectNotFoundProduct = (await req.get('/products'))
+        .body.results.find(product => product.name === 'New test')
+
+      expect(expectNotFoundProduct).toBeUndefined()
     })
   })
 }
