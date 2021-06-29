@@ -21,6 +21,9 @@ export class User {
   @Column({ name: 'login_id', select: false })
   loginId: string;
 
+  @Column({ name: 'stripe_customer_id' })
+  stripeId: string;
+
   @ManyToMany(() => Role)
   @JoinTable({
     name: 'user_roles',

@@ -36,6 +36,11 @@ export class CreateUsersTable1619567921055 implements MigrationInterface {
           isNullable: true
         },
         {
+          name: 'stripe_customer_id',
+          type: 'varchar',
+          isNullable: true
+        },
+        {
           name: 'created_at',
           type: 'timestamp',
           default: 'now()'

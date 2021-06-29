@@ -109,6 +109,9 @@ const routes: RouteList = {
     post: FavoriteController.create,
     delete: FavoriteController.remove
   },
+  '/users/me/stripe_id': {
+    patch: UserController.updateUserStripeId
+  },
   '/users/:id': {
     globalMiddlewares: validateUUIDParams(),
     get: UserController.show,

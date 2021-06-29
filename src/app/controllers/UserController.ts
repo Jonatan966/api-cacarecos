@@ -134,6 +134,28 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
     return res.status(200).json(user)
   }
 
+  async updateUserStripeId (req: Request, res: NewResponse) {
+    const { stripe_customer_id } = req.body
+
+    if (!stripe_customer_id) {
+      return useErrorMessage('invalid fields', 400, res, {
+        stripe_customer_id: 'missing field'
+      })
+    }
+
+    const userRepository = getRepository(User)
+
+    const updateResult = await userRepository.update(res.locals.user.id, {
+      stripeId: stripe_customer_id
+    })
+
+    if (!updateResult.affected) {
+      return useErrorMessage('could not update user stripe id', 500, res)
+    }
+
+    return res.sendStatus(200)
+  }
+
   @DefinePermissions('UPDATE_USER')
   async updateRoles (req: Request, res: NewResponse) {
     const { roles } = req.body
