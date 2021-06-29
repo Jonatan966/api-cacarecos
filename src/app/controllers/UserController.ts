@@ -128,7 +128,7 @@ class UserControllerClass extends AutoBindClass implements AppControllerProps {
 
     const user = await userRepository.findOne(res.locals.user.id, {
       relations: ['roles', 'roles.permissions', 'orders'],
-      select: ['id', 'name', 'email', 'createdAt']
+      select: ['id', 'name', 'email', 'stripeId', 'createdAt']
     })
 
     return res.status(200).json(user)
